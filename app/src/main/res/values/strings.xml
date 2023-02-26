@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NinetyMinutesSleep</string>
+    <string name="sounds">Sounds</string>
+    <string name="alarms">Alarms</string>
+</resources>
