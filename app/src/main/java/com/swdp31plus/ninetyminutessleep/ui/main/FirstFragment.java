@@ -21,6 +21,7 @@ import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.adapters.SoundsAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.FragmentFirstBinding;
 import com.swdp31plus.ninetyminutessleep.entities.Sound;
+import com.swdp31plus.ninetyminutessleep.entities.SoundPlayer;
 
 import java.util.ArrayList;
 
@@ -30,16 +31,21 @@ public class FirstFragment extends Fragment {
     private PageViewModel pageViewModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private View rootView;
-
+    private ArrayList<Sound> sounds;
+    private ArrayList<SoundPlayer> soundsPlayers = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+
+        sounds = new ArrayList<>();
+        soundsPlayers = new ArrayList<>();
     }
 
     @Override
@@ -100,14 +106,24 @@ public class FirstFragment extends Fragment {
         }
 
         binding.soundsRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(),2));
-        ArrayList<Sound> sounds = new ArrayList<>();
-        sounds.add(new Sound("Rain", R.raw.rain));
-        sounds.add(new Sound("Heavy Storm", R.raw.heavy_storm));
-        sounds.add(new Sound("Waves on Rocks",  R.raw.waves_on_rocks));
+
+        buildSoundList();
+
         SoundsAdapter soundsAdapter = new SoundsAdapter();
         soundsAdapter.setContext(getContext());
         soundsAdapter.setLayoutInflater(getLayoutInflater());
         soundsAdapter.addAll(sounds);
+
+        soundsAdapter.setOnItemClickListener(sound -> {
+            int index = sounds.lastIndexOf(sound);
+            if (soundsPlayers.get(index).getPlaying()) {
+                soundsPlayers.get(index).resetMediaPlayer();
+                soundsPlayers.get(index).setPlaying(false);
+            } else {
+                soundsPlayers.get(index).startMediaPlayer();
+                soundsPlayers.get(index).setPlaying(true);
+            }
+        });
 
         binding.soundsRecyclerView.setAdapter(soundsAdapter);
     }
@@ -116,6 +132,16 @@ public class FirstFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void buildSoundList() {
+        sounds.add(new Sound("Rain", R.raw.rain));
+        sounds.add(new Sound("Heavy Storm", R.raw.heavy_storm));
+        sounds.add(new Sound("Waves on Rocks",  R.raw.waves_on_rocks));
+
+        for (Sound sound : sounds) {
+            soundsPlayers.add(new SoundPlayer(sound.getTitle(), getContext(), sound.getSoundRes()));
+        }
     }
 
 }

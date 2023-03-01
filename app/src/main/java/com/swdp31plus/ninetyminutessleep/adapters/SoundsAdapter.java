@@ -43,9 +43,14 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Sound sound = soundsList.get(position);
         holder.layoutSongBoxTxt.setText(sound.getTitle());
-        holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
 
-        holder.layoutSoundBoxCardview.setOnClickListener(view -> {
+        holder.layoutSoundBoxCardview.setOnClickListener(v -> {
+            if (onItemClickListener != null){
+                onItemClickListener.onItemClick(sound);
+            }
+        });
+
+        /*holder.layoutSoundBoxCardview.setOnClickListener(view -> {
             if (mp == null) {
                 mp = MediaPlayer.create(context, sound.getSoundRes());
             }
@@ -57,27 +62,10 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
                 mp.reset();
                 mp.release();
                 holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
+                mp = null;
             }
-        });
+        });*/
         holder.layoutSoundBoxCardview.setOnLongClickListener(view -> {
-            /*Handler h = new Handler();
-            if (mp == null) {
-                mp = MediaPlayer.create(context, sound.getSoundRes());
-            }
-            if (!mp.isPlaying()) {
-                Runnable stopPlaybackRun = () -> {
-                    mp.stop();
-                    mp.reset();
-                    mp.release();
-                    holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
-                };
-                h.postDelayed(stopPlaybackRun, 5 * 1000);
-                mp.start();
-                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_stop_24);
-            } else {
-                mp.stop();
-                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
-            }*/
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
             View dialogView = layoutInflater.inflate(R.layout.dialog_sound_timeout,null);
