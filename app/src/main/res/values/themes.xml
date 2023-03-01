@@ -42,4 +42,8 @@
     <style name="Theme.NinetyMinutesSleep.AppBarOverlay" parent="ThemeOverlay.Material3.BottomAppBar" />
 
     <style name="Theme.NinetyMinutesSleep.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AlarmDisabledTimePickerTheme">
+        <item name="android:textSize">25sp</item>
+    </style>
 </resources>

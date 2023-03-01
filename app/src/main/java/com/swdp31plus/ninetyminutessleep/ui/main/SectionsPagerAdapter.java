@@ -1,7 +1,6 @@
 package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.swdp31plus.ninetyminutessleep.MainActivity;
 import com.swdp31plus.ninetyminutessleep.R;
 
 /**
@@ -19,7 +17,7 @@ import com.swdp31plus.ninetyminutessleep.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.alarms};
+    private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {

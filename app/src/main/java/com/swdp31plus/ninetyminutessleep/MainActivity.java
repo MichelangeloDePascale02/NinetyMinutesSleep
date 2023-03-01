@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {}
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
     public ActivityMainBinding getBinding() {

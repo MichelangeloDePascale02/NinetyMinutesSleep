@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">NinetyMinutesSleep</string>
     <string name="sounds">Sounds</string>
-    <string name="alarms">Alarms</string>
+    <string name="daily_alarm">Daily Alarm</string>
+
+    <string name="warning_title">Warning</string>
+    <string name="warning_text">This application is still in beta. Currently it is possible to play a single sound, and to schedule an alarm using the built in Android app. If you like my work, consider donating.</string>
+
+    <string name="understood">Ok, I understood.</string>
+    <string name="do_not_show_this_again">Do not show this again</string>
+
+    <string name="hours_of_sleep">Hours of sleep:</string>
 </resources>
