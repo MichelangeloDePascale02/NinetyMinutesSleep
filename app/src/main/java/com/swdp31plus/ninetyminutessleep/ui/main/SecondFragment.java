@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_MUTABLE;
@@ -113,7 +114,7 @@ public class SecondFragment extends Fragment {
 
             // calendar is called to get current time in hour and minute
             calendar.set(Calendar.HOUR_OF_DAY, binding.alarmTimePicker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, binding.alarmTimePicker.getCurrentMinute()+1);
+            calendar.set(Calendar.MINUTE, binding.alarmTimePicker.getCurrentMinute());
 
             // using intent i have class AlarmReceiver class which inherits
             // BroadcastReceiver
@@ -136,19 +137,29 @@ public class SecondFragment extends Fragment {
 
 
         binding.alarmTimePickerMinus.setOnClickListener(view12 -> {
-            long newTime = (long) (parseDate(binding.alarmTimePicker.getCurrentHour(), binding.alarmTimePicker.getCurrentMinute()).getTime() - (HOURS * 60 * 60 * 1000));
-            Date newDate = new Date(newTime);
-            binding.alarmTimePicker.setHour(newDate.getHours());
-            binding.alarmTimePicker.setMinute(newDate.getMinutes());
-            hours_of_sleep -= (float) HOURS;
+            Date newDate = new Date((long) (parseDate(binding.alarmTimePicker.getCurrentHour(), binding.alarmTimePicker.getCurrentMinute()).getTime() - (HOURS * 60 * 60 * 1000)));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(newDate);
+            binding.alarmTimePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+            binding.alarmTimePicker.setMinute(calendar.get(Calendar.MINUTE));
+            if (hours_of_sleep != 0) {
+                hours_of_sleep -= (float) HOURS;
+            } else {
+                hours_of_sleep = 24 - (float) HOURS;
+            }
             binding.alarmTimePickerHoursCount.setText(String.format("%s %,.2f", getString(R.string.hours_of_sleep), hours_of_sleep));
         });
         binding.alarmTimePickerPlus.setOnClickListener(view13 -> {
-            long newTime = (long) (parseDate(binding.alarmTimePicker.getHour(),binding.alarmTimePicker.getMinute()).getTime() + (HOURS * 60 * 60 * 1000));
-            Date newDate = new Date(newTime);
-            binding.alarmTimePicker.setHour(newDate.getHours());
-            binding.alarmTimePicker.setMinute(newDate.getMinutes());
-            hours_of_sleep += (float) HOURS;
+            Date newDate = new Date((long) (parseDate(binding.alarmTimePicker.getCurrentHour(), binding.alarmTimePicker.getCurrentMinute()).getTime() + (HOURS * 60 * 60 * 1000)));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(newDate);
+            binding.alarmTimePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+            binding.alarmTimePicker.setMinute(calendar.get(Calendar.MINUTE));
+            if (hours_of_sleep != 24) {
+                hours_of_sleep += (float) HOURS;
+            } else {
+                hours_of_sleep = 0 + (float) HOURS;
+            }
             binding.alarmTimePickerHoursCount.setText(String.format("%s %,.2f", getString(R.string.hours_of_sleep), hours_of_sleep));
         });
     }
@@ -160,7 +171,7 @@ public class SecondFragment extends Fragment {
     }
 
     private Date parseDate(int hour, int minute) {
-        Date date = new SimpleDateFormat("hh:mm").parse("" + hour + ":" + minute, new ParsePosition(0));
+        Date date = new SimpleDateFormat("hh:mm", Locale.ITALIAN).parse("" + hour + ":" + minute, new ParsePosition(0));
         Log.e("NinetyMinutesSleep - TimeParsing", "TimeParsing at SecondFragment:117, value: " + date.getHours() + ":" + date.getMinutes());
         return date;
     }

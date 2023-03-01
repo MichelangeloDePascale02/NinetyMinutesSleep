@@ -63,6 +63,7 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // warning dialog building
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (preferences.getBoolean("show_warning", true)) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
@@ -105,6 +106,7 @@ public class FirstFragment extends Fragment {
         sounds.add(new Sound("Waves on Rocks",  R.raw.waves_on_rocks));
         SoundsAdapter soundsAdapter = new SoundsAdapter();
         soundsAdapter.setContext(getContext());
+        soundsAdapter.setLayoutInflater(getLayoutInflater());
         soundsAdapter.addAll(sounds);
 
         binding.soundsRecyclerView.setAdapter(soundsAdapter);
