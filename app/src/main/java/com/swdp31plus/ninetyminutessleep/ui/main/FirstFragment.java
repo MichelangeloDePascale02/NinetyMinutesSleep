@@ -36,6 +36,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
@@ -76,7 +77,7 @@ public class FirstFragment extends Fragment {
             SharedPreferences.Editor editor = preferences.edit();
 
             LayoutInflater inflater = getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.dialog_warning,null);
+            View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
 
             // Set dialog title
             View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
@@ -85,15 +86,18 @@ public class FirstFragment extends Fragment {
             titleText.setTextSize(22);
             builder.setCustomTitle(titleView);
 
+            TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
+            textView.setText(getString(R.string.warning_text));
+
             builder.setView(dialogView);
 
-            CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_warning);
+            CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 editor.putBoolean("show_warning", !isChecked);
                 editor.apply();
             });
 
-            Button closeBtn = dialogView.findViewById(R.id.button_dialog_warning);
+            Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
 
             final AlertDialog dialog = builder.create();
 

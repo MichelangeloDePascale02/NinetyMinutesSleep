@@ -1,20 +1,26 @@
 package com.swdp31plus.ninetyminutessleep;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
+
+import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +67,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.about) {
+            // show dialog
+        } else if (item.getItemId() == R.id.sleep_timer_for_sounds) {
+            // do something
+        } else {
+            Toast.makeText(getApplicationContext(),R.string.error,Toast.LENGTH_SHORT).show();
+        }
+
+        return true;
+    }
+
 
     public ActivityMainBinding getBinding() {
         return binding;

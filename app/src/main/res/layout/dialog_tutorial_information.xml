@@ -6,16 +6,16 @@
 
 
     <TextView
+        android:id="@+id/text_view_dialog_tutorial_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/warning_text"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="15dp"
         android:textSize="16sp"
         />
 
     <CheckBox
-        android:id="@+id/check_box_dialog_warning"
+        android:id="@+id/check_box_dialog_tutorial_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -24,7 +24,7 @@
         android:text="@string/do_not_show_this_again"/>
 
     <Button
-        android:id="@+id/button_dialog_warning"
+        android:id="@+id/button_dialog_tutorial_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

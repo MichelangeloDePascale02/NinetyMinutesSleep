@@ -6,8 +6,21 @@
     <string name="warning_title">Warning</string>
     <string name="warning_text">This application is still in beta. Currently it is possible to play a single sound, and to schedule an alarm using the built in Android app. If you like my work, consider donating.</string>
 
+    <string name="explanation_90_title">Why 90 minutes?</string>
+    <string name="explanation_90_text">When we fall asleep we enter non-rapid eye movement sleep (NREM). This is divided into three stages, with each becoming progressively deeper. NREM1 and NREM2 are light phases of sleep, from which we can be easily roused. NREM3 becomes deeper, and if woken up, we can feel disorientated. Following on from this is rapid eye movement sleep (REM), the stage at which we dream.
+        Each sleep cycle lasts around one and a half hours, and in order to feel fully rested and refreshed when we wake up, we must experience all four stages. A full night’s sleep will include five or six cycles, while a disturbed, restless night consists of fewer.</string>
+
     <string name="understood">Ok, I understood.</string>
     <string name="do_not_show_this_again">Do not show this again</string>
+
+    <string name="about">About</string>
+    <string name="sleep_timer_for_sounds">Add timer for sounds</string>
+
+    <string name="error">Error</string>
+
+    <string name="long_sleeper">Long sleeper</string>
+    <string name="medium_sleeper">Medium sleeper</string>
+    <string name="short_sleeper">Short sleeper</string>
 
     <string name="hours_of_sleep">Hours of sleep:</string>
 </resources>
