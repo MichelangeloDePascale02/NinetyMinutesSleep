@@ -1,30 +1,35 @@
 package com.swdp31plus.ninetyminutessleep;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-import android.widget.Toolbar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 
-import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private int timeoutTimerInMillis = 0;
+    private SectionsPagerAdapter sectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
@@ -41,6 +46,75 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = binding.fab;
 
         fab.setVisibility(View.GONE);
+
+
+
+        binding.topAppBar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.about) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_about,null);
+                // Set dialog title
+                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+                titleText.setText(getApplicationContext().getString(R.string.about_title));
+                TextView textView = dialogView.findViewById(R.id.text_view_dialog_about);
+                textView.setText(getString(R.string.about_text));
+                titleText.setTextSize(22);
+                builder.setCustomTitle(titleView);
+                builder.setView(dialogView);
+
+                final AlertDialog dialog = builder.create();
+
+                dialogView.findViewById(R.id.button_dialog_about_dismiss).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+
+                dialogView.findViewById(R.id.button_dialog_about_github).setOnClickListener(v -> {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(getString(R.string.github_link)));
+                    startActivity(i);
+                });
+
+                dialog.show();
+                return true;
+            } else if (item.getItemId() == R.id.sleep_timer_for_sounds) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_sound_timeout,null);
+                // Set dialog title
+                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+                titleText.setText(getApplicationContext().getString(R.string.timeout_title));
+                titleText.setTextSize(22);
+                builder.setCustomTitle(titleView);
+                builder.setView(dialogView);
+
+                ((SeekBar) dialogView.findViewById(R.id.seek_bar_sound_timeout)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @SuppressLint("DefaultLocale")
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        ((TextView) dialogView.findViewById(R.id.text_view_sound_timeout)).setText(String.format("%d %s", i, getString(R.string.minutes)));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
+
+                final AlertDialog dialog = builder.create();
+
+                dialogView.findViewById(R.id.button_dialog_sound_timeout).setOnClickListener(v -> {
+                    timeoutTimerInMillis = ((SeekBar) dialogView.findViewById(R.id.seek_bar_sound_timeout)).getProgress();
+                    dialog.dismiss();
+                    sectionsPagerAdapter.getFirstFragment().onTimeOutSet(timeoutTimerInMillis);
+                });
+                dialog.show();
+                return true;
+            }
+            return false;
+        });
+
+        binding.topAppBar.setNavigationOnClickListener(view -> {});
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -56,38 +130,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
-        });
-
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+            public void onPageScrollStateChanged(int state) {}});
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu,menu);
+        getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.about) {
-            // show dialog
-        } else if (item.getItemId() == R.id.sleep_timer_for_sounds) {
-            // do something
-        } else {
-            Toast.makeText(getApplicationContext(),R.string.error,Toast.LENGTH_SHORT).show();
-        }
-
-        return true;
-    }
-
 
     public ActivityMainBinding getBinding() {
         return binding;
+    }
+
+    public int getTimeoutTimerInMillis() {
+        return timeoutTimerInMillis;
     }
 }

@@ -5,19 +5,30 @@
     android:orientation="vertical">
 
     <SeekBar
-        android:id="@+id/seek_bar_timeout"
+        android:id="@+id/seek_bar_sound_timeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:max="120"
         android:layout_marginHorizontal="20dp"/>
 
+    <TextView
+        android:id="@+id/text_view_sound_timeout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="17sp"
+        />
+
     <Button
-        android:id="@+id/button_dialog_tutorial_information"
+        android:id="@+id/button_dialog_sound_timeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textSize="17sp"
         android:textColor="?attr/colorPrimary"
         style="?android:attr/buttonBarButtonStyle"
-        android:text="@string/understood" />
+        android:text="@string/set" />
 
 </LinearLayout>

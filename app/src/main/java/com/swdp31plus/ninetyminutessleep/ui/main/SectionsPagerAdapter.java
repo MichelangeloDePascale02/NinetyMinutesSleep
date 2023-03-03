@@ -16,6 +16,9 @@ import com.swdp31plus.ninetyminutessleep.R;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+    private FirstFragment firstFragment;
+    private SecondFragment secondFragment;
+
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
     private final Context mContext;
@@ -30,7 +33,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         if (position == 0) {
-            return FirstFragment.newInstance(position + 1);
+            firstFragment = FirstFragment.newInstance(position + 1);
+            return firstFragment;
         } else if (position == 1) {
             return SecondFragment.newInstance(position + 1);
         } else {
@@ -48,5 +52,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 2 total pages.
         return 2;
+    }
+
+    public FirstFragment getFirstFragment() {
+        return firstFragment;
     }
 }

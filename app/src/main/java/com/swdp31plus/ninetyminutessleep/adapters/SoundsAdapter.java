@@ -20,14 +20,15 @@ import com.swdp31plus.ninetyminutessleep.entities.Sound;
 import com.swdp31plus.ninetyminutessleep.ui.main.FirstFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder> {
 
     private ArrayList<Sound> soundsList;
     private OnItemClickListener onItemClickListener;
-    private MediaPlayer mp;
     private Context context;
     private LayoutInflater layoutInflater;
+    private int[] playingStatuses;
 
     @NonNull
     @Override
@@ -45,42 +46,16 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
         holder.layoutSongBoxTxt.setText(sound.getTitle());
 
         holder.layoutSoundBoxCardview.setOnClickListener(v -> {
-            if (onItemClickListener != null){
+            if(playingStatuses[position] == 0) {
+                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_stop_24);
+                playingStatuses[position] = 1;
+            } else {
+                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
+                playingStatuses[position] = 0;
+            }
+            if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(sound);
             }
-        });
-
-        /*holder.layoutSoundBoxCardview.setOnClickListener(view -> {
-            if (mp == null) {
-                mp = MediaPlayer.create(context, sound.getSoundRes());
-            }
-            if (!mp.isPlaying()) {
-                mp.start();
-                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_stop_24);
-            } else {
-                mp.stop();
-                mp.reset();
-                mp.release();
-                holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_play_arrow_24);
-                mp = null;
-            }
-        });*/
-        holder.layoutSoundBoxCardview.setOnLongClickListener(view -> {
-
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
-            View dialogView = layoutInflater.inflate(R.layout.dialog_sound_timeout,null);
-            // Set dialog title
-            View titleView = layoutInflater.inflate(R.layout.dialog_generic_title, null);
-            TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
-            titleText.setText(context.getString(R.string.warning_title));
-            titleText.setTextSize(22);
-            builder.setCustomTitle(titleView);
-
-            builder.setView(dialogView);
-
-            builder.create().show();
-
-            return true;
         });
     }
 
@@ -129,5 +104,14 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
 
     public interface OnItemClickListener {
         void onItemClick(Sound sound);
+    }
+
+    public void createPlayingIndex(int size){
+        playingStatuses = new int[size];
+        initializePlayingIndex();
+    }
+
+    public void initializePlayingIndex() {
+        Arrays.fill(playingStatuses, 0);
     }
 }

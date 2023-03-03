@@ -1,7 +1,10 @@
 package com.swdp31plus.ninetyminutessleep.entities;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+
+import com.swdp31plus.ninetyminutessleep.R;
 
 public class SoundPlayer {
 
@@ -42,5 +45,6 @@ public class SoundPlayer {
 
     public void startMediaPlayer() {
         mp.start();
+        mp.setLooping(true);
     }
 }

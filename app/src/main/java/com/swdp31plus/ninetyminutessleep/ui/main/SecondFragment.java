@@ -76,7 +76,7 @@ public class SecondFragment extends Fragment {
         return rootView;
     }
 
-    @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
+    @SuppressLint({"SimpleDateFormat", "DefaultLocale", "QueryPermissionsNeeded"})
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

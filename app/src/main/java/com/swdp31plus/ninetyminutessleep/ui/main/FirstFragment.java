@@ -2,13 +2,16 @@ package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -33,6 +36,7 @@ public class FirstFragment extends Fragment {
     private View rootView;
     private ArrayList<Sound> sounds;
     private ArrayList<SoundPlayer> soundsPlayers = new ArrayList<>();
+    private SoundsAdapter soundsAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class FirstFragment extends Fragment {
 
         sounds = new ArrayList<>();
         soundsPlayers = new ArrayList<>();
+        soundsAdapter = new SoundsAdapter();
     }
 
     @Override
@@ -113,7 +118,6 @@ public class FirstFragment extends Fragment {
 
         buildSoundList();
 
-        SoundsAdapter soundsAdapter = new SoundsAdapter();
         soundsAdapter.setContext(getContext());
         soundsAdapter.setLayoutInflater(getLayoutInflater());
         soundsAdapter.addAll(sounds);
@@ -139,13 +143,32 @@ public class FirstFragment extends Fragment {
     }
 
     private void buildSoundList() {
-        sounds.add(new Sound("Rain", R.raw.rain));
-        sounds.add(new Sound("Heavy Storm", R.raw.heavy_storm));
-        sounds.add(new Sound("Waves on Rocks",  R.raw.waves_on_rocks));
+        sounds.add(new Sound(getString(R.string.rain), R.raw.rain));
+        sounds.add(new Sound(getString(R.string.heavy_storm), R.raw.heavy_storm));
+        sounds.add(new Sound(getString(R.string.waves_on_rocks),  R.raw.waves_on_rocks));
+        sounds.add(new Sound(getString(R.string.brown_noise),  R.raw.brown_noise));
+        sounds.add(new Sound(getString(R.string.birds), R.raw.birds));
+        sounds.add(new Sound(getString(R.string.light_breeze), R.raw.light_breeze));
 
         for (Sound sound : sounds) {
             soundsPlayers.add(new SoundPlayer(sound.getTitle(), getContext(), sound.getSoundRes()));
         }
+
+        soundsAdapter.createPlayingIndex(sounds.size());
+    }
+
+    public void onTimeOutSet(int timeOut) {
+        Toast.makeText(getContext(),"" + timeOut, Toast.LENGTH_SHORT).show();
+        Handler h = new Handler();
+            Runnable stopPlaybackRun = () -> {
+                for (SoundPlayer soundPlayer : soundsPlayers) {
+                    soundPlayer.resetMediaPlayer();
+                    soundPlayer.setPlaying(false);
+                }
+                binding.soundsRecyclerView.setAdapter(soundsAdapter);
+                soundsAdapter.initializePlayingIndex();
+            };
+        h.postDelayed(stopPlaybackRun, (long) timeOut * 1000 * 60);
     }
 
 }
