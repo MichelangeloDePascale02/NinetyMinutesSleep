@@ -5,7 +5,7 @@
     <string name="daily_alarm">Daily Alarm</string>
 
     <string name="warning_title">Warning</string>
-    <string name="warning_text">This application is still in beta. Currently it is possible to play sounds (even simultaneously), to set a power-off timer for them and to schedule an alarm using the built in Android app. Sounds library will be expanded in the future, too!</string>
+    <string name="warning_text">This application is still in beta. Currently it is possible to play sounds (even simultaneously), to set a power-off timer for them and right now we are working on setting multiple alarms inside the app directly. Sounds library will be expanded in the future, too!</string>
     <string name="explanation_90_title">Why 90 minutes?</string>
     <string name="explanation_90_text">When we fall asleep we enter non-rapid eye movement sleep (NREM). This is divided into three stages, with each becoming progressively deeper. NREM1 and NREM2 are light phases of sleep, from which we can be easily roused. NREM3 becomes deeper, and if woken up, we can feel disorientated. Following on from this is rapid eye movement sleep (REM), the stage at which we dream.
         Each sleep cycle lasts around one and a half hours, and in order to feel fully rested and refreshed when we wake up, we must experience all four stages. A full night’s sleep will include five or six cycles, while a disturbed, restless night consists of fewer.</string>
@@ -22,6 +22,7 @@
 
     <string name="about">About</string>
     <string name="sleep_timer_for_sounds">Add timer for sounds</string>
+    <string name="why_90_mins">Why 90?</string>
 
     <string name="error">Error</string>
     <string name="error_no_browser">No suitable browsers are present to complete this action.</string>
@@ -31,7 +32,7 @@
     <string name="medium_sleeper">Medium sleeper</string>
     <string name="short_sleeper">Short sleeper</string>
 
-    <string name="hours_of_sleep">Hours of sleep:</string>
+    <string name="hours_of_sleep">Calculated hours of sleep:</string>
     <string name="minutes"> minutes</string>
 
     <string name="rain">Rain</string>
@@ -41,4 +42,6 @@
     <string name="birds">Birds</string>
     <string name="light_breeze">Light Breeze</string>
     <string name="crackling_fire">Crackling Fire</string>
+
+    <string name="alarm">Alarm</string>
 </resources>

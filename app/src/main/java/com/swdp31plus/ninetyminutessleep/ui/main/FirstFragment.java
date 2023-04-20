@@ -97,6 +97,7 @@ public class FirstFragment extends Fragment {
             builder.setView(dialogView);
 
             CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
+            checkBox.setVisibility(View.VISIBLE);
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 editor.putBoolean("show_warning", !isChecked);
                 editor.apply();
