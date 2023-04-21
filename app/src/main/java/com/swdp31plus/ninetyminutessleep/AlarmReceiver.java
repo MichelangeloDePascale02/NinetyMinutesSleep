@@ -77,7 +77,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-                String toastText = String.format("Sveglie applicate");
+                String toastText = "Sveglie applicate";
                 Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
                 startRescheduleAlarmsService(context);
             }

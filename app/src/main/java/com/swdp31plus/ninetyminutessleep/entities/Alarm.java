@@ -1,6 +1,8 @@
 package com.swdp31plus.ninetyminutessleep.entities;
 
-public class Alarm implements Comparable {
+import java.io.Serializable;
+
+public class Alarm implements Comparable, Serializable {
 
     private String time;
 

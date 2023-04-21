@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".AlarmActivity">
 
-    <Button
+    <fragment
+        android:name="com.swdp31plus.ninetyminutessleep.ui.main.AlarmShowFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dismiss"
-        android:id="@+id/dismissAlarmButton"/>
+        android:id="@+id/show_alarm_fragment"
+        />
 
 </LinearLayout>

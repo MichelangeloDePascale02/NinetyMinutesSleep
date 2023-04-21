@@ -12,7 +12,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.entities.Alarm;
 
 import java.util.Date;
 
@@ -41,7 +40,7 @@ public class DialogAddAlarmFragment extends DialogFragment {
 
         // Create the inflater and inflate the layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View root = inflater.inflate(R.layout.fragment_alarm_set, null);
+        View root = inflater.inflate(R.layout.fragment_dialog_alarm_set, null);
 
         // Set dialog main options
         builder.setView(root);

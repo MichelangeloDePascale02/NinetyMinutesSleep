@@ -15,6 +15,14 @@
         android:layout_marginHorizontal="20dp"
         android:text="Aggiungi sveglia"/>
 
+    <Button
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="20dp"
+        android:text="testactivity"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alarmsListRecyclerView"
         android:layout_marginTop="10dp"
