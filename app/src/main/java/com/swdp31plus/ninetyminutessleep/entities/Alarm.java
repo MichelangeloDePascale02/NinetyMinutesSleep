@@ -1,6 +1,6 @@
 package com.swdp31plus.ninetyminutessleep.entities;
 
-public class Alarm {
+public class Alarm implements Comparable {
 
     private String time;
 
@@ -10,5 +10,12 @@ public class Alarm {
 
     public String getTime() {
         return time;
+    }
+
+    // Yes, i know it has flaws. Good enough for now.
+    // TODO: fix compareTo
+    @Override
+    public int compareTo(Object o) {
+        return time.compareTo(o.toString());
     }
 }

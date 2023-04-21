@@ -38,6 +38,7 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
     private View rootView;
     private ArrayList<Alarm> alarms;
     private DialogAddAlarmFragment dialogAddAlarmFragment;
+    private AlarmsAdapter alarmsAdapter;
 
     public static AlarmListFragment newInstance(int index) {
         AlarmListFragment fragment = new AlarmListFragment();
@@ -69,6 +70,7 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
 
         binding = FragmentAlarmListBinding.inflate(inflater, container, false);
         rootView = binding.getRoot();
+        alarmsAdapter = new AlarmsAdapter();
         return rootView;
     }
 
@@ -79,7 +81,6 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
         alarms.add(new Alarm("09:00"));
         alarms.add(new Alarm("11:30"));
         alarms.add(new Alarm("15:20"));
-        AlarmsAdapter alarmsAdapter = new AlarmsAdapter();
         alarmsAdapter.addAll(alarms);
 
         alarmsAdapter.setOnItemClickListener(alarm -> {
@@ -103,7 +104,16 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
     }
 
     @Override
-    public void onDialogDismissed(Alarm alarm) {
-
+    public void onDialogDismissed(String hour, String minute) {
+        Alarm alarm = new Alarm(
+                new StringBuilder()
+                        .append(hour)
+                        .append(":")
+                        .append(minute)
+                        .toString());
+        alarms.add(alarm);
+        alarmsAdapter.add(alarm);
+        alarmsAdapter.sort();
+        alarmsAdapter.notifyDataSetChanged();
     }
 }

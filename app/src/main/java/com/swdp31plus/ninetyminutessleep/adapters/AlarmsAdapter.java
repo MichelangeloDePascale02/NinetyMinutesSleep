@@ -69,6 +69,9 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     public void removeAll(){
         alarmsList.clear();
     }
+    public void sort() {
+        alarmsList.sort(null);
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
