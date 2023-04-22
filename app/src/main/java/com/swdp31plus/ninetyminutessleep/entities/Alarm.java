@@ -18,6 +18,6 @@ public class Alarm implements Comparable, Serializable {
     // TODO: fix compareTo
     @Override
     public int compareTo(Object o) {
-        return time.compareTo(o.toString());
+        return -time.compareTo(o.toString());
     }
 }

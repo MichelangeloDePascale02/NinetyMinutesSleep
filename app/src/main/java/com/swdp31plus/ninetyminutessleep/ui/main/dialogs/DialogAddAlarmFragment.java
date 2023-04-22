@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -56,8 +57,13 @@ public class DialogAddAlarmFragment extends DialogFragment {
         hoursTextView = root.findViewById(R.id.hours_picker);
         minutesTextView = root.findViewById(R.id.minutes_picker);
 
+        EditText hoursEditText = root.findViewById(R.id.hour);
+        EditText minutesEditText = root.findViewById(R.id.minute);
+
         hoursTextView.setText(""+currentDate.getHours());
         minutesTextView.setText(""+currentDate.getMinutes());
+        hoursEditText.setText(""+currentDate.getHours());
+        minutesEditText.setText(""+currentDate.getMinutes());
 
         Button alarmTimePickerMinus = root.findViewById(R.id.alarmTimePickerMinus);
 
@@ -74,7 +80,8 @@ public class DialogAddAlarmFragment extends DialogFragment {
         Button alarmConfirm = root.findViewById(R.id.alarmConfirm);
 
         alarmConfirm.setOnClickListener(v -> {
-            getDataListener.onDialogDismissed(prepareText(currentHour), prepareText(currentMinute));
+            //getDataListener.onDialogDismissed(prepareText(currentHour), prepareText(currentMinute));
+            getDataListener.onDialogDismissed(hoursEditText.getText().toString(),minutesEditText.getText().toString());
             dismiss();
         });
 

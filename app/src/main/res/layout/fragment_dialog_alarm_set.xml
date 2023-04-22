@@ -51,7 +51,18 @@
 
     </LinearLayout>
 
-
+    <EditText
+        android:id="@+id/hour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="00">
+    </EditText>
+    <EditText
+        android:id="@+id/minute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="00">
+    </EditText>
 
     <LinearLayout
         android:layout_width="match_parent"

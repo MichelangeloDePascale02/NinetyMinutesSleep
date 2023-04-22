@@ -128,16 +128,9 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
 
     @Override
     public void onDialogDismissed(String hour, String minute) {
-        hour = "01";
-        minute = "58";
         scheduleAlarm(Integer.parseInt(hour), Integer.parseInt(minute));
         Toast.makeText(getContext(),"Alarm set at " + hour + ":" + minute, Toast.LENGTH_LONG).show();
-        Alarm alarm = new Alarm(
-                new StringBuilder()
-                        .append(hour)
-                        .append(":")
-                        .append(minute)
-                        .toString());
+        Alarm alarm = new Alarm(hour + ":" + minute);
         alarms.add(alarm);
         alarmsAdapter.add(alarm);
         alarmsAdapter.sort();
@@ -150,9 +143,11 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
 
-        // using intent i have class AlarmReceiver class which inherits
+        // using intent I have class AlarmReceiver class which inherits
         // BroadcastReceiver
         Intent intent = new Intent(getContext(), AlarmReceiver.class);
+
+        intent.putExtra("a",hour + ":" + minute);
 
         // we call broadcast using pendingIntent
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, FLAG_IMMUTABLE);
