@@ -34,6 +34,9 @@
     <string name="hours_of_sleep">Hours of sleep:</string>
     <string name="minutes"> minutes</string>
 
+    <string name="addCycle">+ 1 cycle</string>
+    <string name="removeCycle">- 1 cycle</string>
+
     <string name="rain">Rain</string>
     <string name="heavy_storm">Heavy Storm</string>
     <string name="waves_on_rocks">Waves on Rocks</string>

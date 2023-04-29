@@ -16,8 +16,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -110,6 +113,36 @@ public class MainActivity extends AppCompatActivity {
                 });
                 dialog.show();
                 return true;
+            } else if (item.getItemId() == R.id.why90) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
+
+                // Set dialog title
+                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+                titleText.setText(getString(R.string.explanation_90_title));
+                titleText.setTextSize(22);
+                builder.setCustomTitle(titleView);
+
+                TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
+                textView.setText(getString(R.string.explanation_90_text));
+
+                builder.setView(dialogView);
+
+                CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
+                checkBox.setVisibility(View.GONE);
+
+                Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
+
+                final AlertDialog dialog = builder.create();
+
+                closeBtn.setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+
+                dialog.show();
             }
             return false;
         });

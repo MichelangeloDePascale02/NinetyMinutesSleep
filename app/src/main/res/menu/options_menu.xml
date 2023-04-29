@@ -7,6 +7,10 @@
         android:title="@string/sleep_timer_for_sounds" />
 
     <item
+        android:id="@+id/why90"
+        android:title="@string/explanation_90_title"/>
+
+    <item
         android:id="@+id/about"
         android:title="@string/about"/>
 

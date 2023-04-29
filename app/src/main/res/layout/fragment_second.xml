@@ -13,28 +13,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/> -->
 
-    <Button
-        android:layout_marginTop="20dp"
-
-        android:id="@+id/alarmTimePickerMinus"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:text="-1h30"/>
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="10dp">
 
-    <TimePicker
-        android:id="@+id/alarmTimePicker"
+        <TextView
+            android:id="@+id/hours_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textSize="40sp"
+            android:text="00"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="40sp"
+            android:text=":"/>
+
+        <TextView
+            android:id="@+id/minutes_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textSize="40sp"
+            android:text="00"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AlarmDisabledTimePickerTheme"
-        android:timePickerMode="spinner"/>
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="20dp">
 
-    <Button
-        android:id="@+id/alarmTimePickerPlus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"
-        android:text="+1h30"/>
+        <Button
+            android:id="@+id/alarmTimePickerMinus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:text="@string/removeCycle"/>
+        <Button
+            android:id="@+id/alarmTimePickerPlus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="@string/addCycle"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/alarmTimePickerHoursCount"

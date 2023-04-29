@@ -27,6 +27,7 @@ import com.swdp31plus.ninetyminutessleep.MainActivity;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.databinding.FragmentSecondBinding;
 
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +43,8 @@ public class SecondFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private View rootView;
     private double HOURS = 1.5;
+    private int currentHour;
+    private int currentMinute;
     private double hours_of_sleep = 0;
     private boolean notFirstTimeInThisSession = true;
 
@@ -73,6 +76,11 @@ public class SecondFragment extends Fragment {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         rootView = binding.getRoot();
+
+        Date currentDate = new Date();
+
+        binding.hoursPicker.setText(""+currentDate.getHours());
+        binding.minutesPicker.setText(""+currentDate.getMinutes());
         return rootView;
     }
 
@@ -105,35 +113,31 @@ public class SecondFragment extends Fragment {
             Calendar calendar = Calendar.getInstance();
 
             // calendar is called to get current time in hour and minute
-            calendar.set(Calendar.HOUR_OF_DAY, binding.alarmTimePicker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, binding.alarmTimePicker.getCurrentMinute());
-
-            // using intent i have class AlarmReceiver class which inherits
-            // BroadcastReceiver
-            Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
-            intent.putExtra(AlarmClock.EXTRA_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
-            intent.putExtra(AlarmClock.EXTRA_MINUTES, calendar.get(Calendar.MINUTE));
-            intent.putExtra(AlarmClock.EXTRA_MESSAGE, new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + " - " + calendar.getTimeInMillis());
-            if(intent.resolveActivity(requireActivity().getPackageManager()) != null){
-                startActivity(intent);
-                Toast.makeText(getContext(), "Please confirm the alarm", Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(getContext(), "There is no app that support this action", Toast.LENGTH_LONG).show();
+            try {
+                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt((String) binding.hoursPicker.getText()));
+                calendar.set(Calendar.MINUTE, Integer.parseInt((String) binding.minutesPicker.getText()));
+                // using intent i have class AlarmReceiver class which inherits
+                // BroadcastReceiver
+                Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+                intent.putExtra(AlarmClock.EXTRA_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
+                intent.putExtra(AlarmClock.EXTRA_MINUTES, calendar.get(Calendar.MINUTE));
+                intent.putExtra(AlarmClock.EXTRA_MESSAGE, new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + " - " + calendar.getTimeInMillis());
+                if(intent.resolveActivity(requireActivity().getPackageManager()) != null){
+                    startActivity(intent);
+                    Toast.makeText(getContext(), "Please confirm the alarm", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getContext(), "There is no app that support this action", Toast.LENGTH_LONG).show();
+                }
+            } catch (NumberFormatException nfe) {
+                Toast.makeText(getContext(),"CHAR",Toast.LENGTH_LONG).show();
             }
         });
-
-        binding.alarmTimePicker.setIs24HourView(true);
-        binding.alarmTimePicker.setEnabled(false);
 
         binding.alarmTimePickerHoursCount.setText(String.format("%s %d", getString(R.string.hours_of_sleep), 0));
 
 
         binding.alarmTimePickerMinus.setOnClickListener(view12 -> {
-            Date newDate = new Date((long) (parseDate(binding.alarmTimePicker.getCurrentHour(), binding.alarmTimePicker.getCurrentMinute()).getTime() - (HOURS * 60 * 60 * 1000)));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(newDate);
-            binding.alarmTimePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
-            binding.alarmTimePicker.setMinute(calendar.get(Calendar.MINUTE));
+            editCycle(0);
             if (hours_of_sleep != 0) {
                 hours_of_sleep -= (float) HOURS;
             } else {
@@ -151,11 +155,7 @@ public class SecondFragment extends Fragment {
             binding.alarmTimePickerHoursCount.setText(String.format("%s %,.2f", getString(R.string.hours_of_sleep), hours_of_sleep));
         });
         binding.alarmTimePickerPlus.setOnClickListener(view13 -> {
-            Date newDate = new Date((long) (parseDate(binding.alarmTimePicker.getCurrentHour(), binding.alarmTimePicker.getCurrentMinute()).getTime() + (HOURS * 60 * 60 * 1000)));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(newDate);
-            binding.alarmTimePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
-            binding.alarmTimePicker.setMinute(calendar.get(Calendar.MINUTE));
+            editCycle(1);
             if (hours_of_sleep != 24) {
                 hours_of_sleep += (float) HOURS;
             } else {
@@ -179,55 +179,59 @@ public class SecondFragment extends Fragment {
         binding = null;
     }
 
-    private Date parseDate(int hour, int minute) {
-        Date date = new SimpleDateFormat("hh:mm", Locale.ITALIAN).parse("" + hour + ":" + minute, new ParsePosition(0));
-        Log.e("NinetyMinutesSleep - TimeParsing", "TimeParsing at SecondFragment:117, value: " + date.getHours() + ":" + date.getMinutes());
-        return date;
+    private void editCycle(int param) {
+        currentHour = Integer.parseInt((String) binding.hoursPicker.getText());
+        currentMinute = Integer.parseInt((String) binding.minutesPicker.getText());
+
+        if (param == 0) {
+            subtractHour();
+            subtractMinute();
+        } else if (param == 1) {
+            addHour();
+            addMinute();
+        }
+
+        binding.hoursPicker.setText(prepareText(currentHour));
+        binding.minutesPicker.setText(prepareText(currentMinute));
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && notFirstTimeInThisSession) {
-            // info dialog building
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            if (preferences.getBoolean("show_90_explanation", true)) {
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
-                SharedPreferences.Editor editor = preferences.edit();
+    private void subtractHour() {
+        if (currentHour > 0)
+            currentHour--;
+        else
+            currentHour = 23;
+    }
 
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
-
-                // Set dialog title
-                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
-                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
-                titleText.setText(getString(R.string.explanation_90_title));
-                titleText.setTextSize(22);
-                builder.setCustomTitle(titleView);
-
-                TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
-                textView.setText(getString(R.string.explanation_90_text));
-
-                builder.setView(dialogView);
-
-                CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
-                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    editor.putBoolean("show_90_explanation", !isChecked);
-                    editor.apply();
-                });
-
-                Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
-
-                final AlertDialog dialog = builder.create();
-
-                closeBtn.setOnClickListener(v -> {
-                    editor.apply();
-                    dialog.dismiss();
-                });
-
-                dialog.show();
-                notFirstTimeInThisSession = false;
-            }
+    private void subtractMinute() {
+        if (currentMinute > 30)
+            currentMinute -= 30;
+        else {
+            currentMinute += 30;
+            subtractHour();
         }
+    }
+
+    private void addHour() {
+        if (currentHour < 23)
+            currentHour++;
+        else
+            currentHour = 0;
+    }
+    private void addMinute() {
+        if (currentMinute < 30)
+            currentMinute += 30;
+        else {
+            currentMinute -= 30;
+            addHour();
+        }
+    }
+
+    private String prepareText(int value) {
+        StringBuilder builder = new StringBuilder();
+        if (value < 10) {
+            builder.append("0");
+        }
+        builder.append(value);
+        return builder.toString();
     }
 }
