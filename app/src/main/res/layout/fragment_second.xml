@@ -75,19 +75,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/alarmTimePickerHoursCount"
+        android:id="@+id/alarmTimePickerSleepHours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="60dp"
-        android:textSize="20sp"
-        android:text="@string/hours_of_sleep"/>
-
-    <TextView
-        android:id="@+id/alarmTimePickerHoursScore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="60dp"
-        android:textSize="20sp"/>
+        android:layout_marginHorizontal="30dp"
+        android:textSize="18sp"/>
 </LinearLayout>

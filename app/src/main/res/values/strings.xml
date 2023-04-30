@@ -27,9 +27,10 @@
     <string name="error_no_browser">No suitable browsers are present to complete this action.</string>
     <string name="coming_soon">Coming soon!</string>
 
-    <string name="long_sleeper">Long sleeper</string>
-    <string name="medium_sleeper">Medium sleeper</string>
-    <string name="short_sleeper">Short sleeper</string>
+
+    <string name="long_sleeper">Your body and mind are thanking you for getting %1$.1f hours of sleep. Keep up the good work and continue to prioritize your rest.</string>
+    <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f Keep up the good work, but remember that there\'s always room for improvement.</string>
+    <string name="short_sleeper">Invest in your health and well-being by giving your body the sleep it needs to function at its best. %1$.1f hours of sleep are not enough. Try to increase your sleep time to at least six hours.</string>
 
     <string name="hours_of_sleep">Hours of sleep:</string>
     <string name="minutes"> minutes</string>

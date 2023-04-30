@@ -88,27 +88,7 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*ArrayList<Alarm> alarms = new ArrayList<>();
-        alarms.add(new Alarm("06:45"));
-        alarms.add(new Alarm("09:00"));
-        alarms.add(new Alarm("11:30"));
-        alarms.add(new Alarm("15:20"));
-        alarms.add(new Alarm("19:30"));
-        alarms.add(new Alarm("20:15"));
-        alarms.add(new Alarm("21:05"));
-        alarms.add(new Alarm("23:30"));
-        AlarmsAdapter alarmsAdapter = new AlarmsAdapter();
-        alarmsAdapter.addAll(alarms);
-
-        alarmsAdapter.setOnItemClickListener(alarm -> {
-            Snackbar.make(getView(), alarm.getTime(), Snackbar.LENGTH_SHORT).show();
-        });
-
-        binding.alarmsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        binding.alarmsRecyclerView.setAdapter(alarmsAdapter);
-*/
-        ((MainActivity) requireActivity()).getBinding().fab.setImageResource(R.drawable.baseline_check_24);
-
+        ((MainActivity) requireActivity()).getBinding().fab.setImageResource(R.drawable.baseline_alarm_add_24);
         ((MainActivity) requireActivity()).getBinding().fab.setOnClickListener(view1 -> {
             Calendar calendar = Calendar.getInstance();
 
@@ -133,43 +113,13 @@ public class SecondFragment extends Fragment {
             }
         });
 
-        binding.alarmTimePickerHoursCount.setText(String.format("%s %d", getString(R.string.hours_of_sleep), 0));
-
-
         binding.alarmTimePickerMinus.setOnClickListener(view12 -> {
-            editCycle(0);
-            if (hours_of_sleep != 0) {
-                hours_of_sleep -= (float) HOURS;
-            } else {
-                hours_of_sleep = 24 - (float) HOURS;
-            }
-            if (hours_of_sleep == 0)
-                binding.alarmTimePickerHoursScore.setText("");
-            else if (hours_of_sleep > 0 && hours_of_sleep <= 6)
-                binding.alarmTimePickerHoursScore.setText(R.string.short_sleeper);
-            else if (hours_of_sleep > 6 && hours_of_sleep <= 9)
-                binding.alarmTimePickerHoursScore.setText(R.string.medium_sleeper);
-            else
-                binding.alarmTimePickerHoursScore.setText(R.string.long_sleeper);
-
-            binding.alarmTimePickerHoursCount.setText(String.format("%s %,.2f", getString(R.string.hours_of_sleep), hours_of_sleep));
-        });
+                editCycle(0);
+                updateSleepCount(0);
+            });
         binding.alarmTimePickerPlus.setOnClickListener(view13 -> {
-            editCycle(1);
-            if (hours_of_sleep != 24) {
-                hours_of_sleep += (float) HOURS;
-            } else {
-                hours_of_sleep = 0 + (float) HOURS;
-            }
-            if (hours_of_sleep == 0)
-                binding.alarmTimePickerHoursScore.setText("");
-            else if (hours_of_sleep > 0 && hours_of_sleep <= 6)
-                binding.alarmTimePickerHoursScore.setText(R.string.short_sleeper);
-            else if (hours_of_sleep > 6 && hours_of_sleep <= 9)
-                binding.alarmTimePickerHoursScore.setText(R.string.medium_sleeper);
-            else
-                binding.alarmTimePickerHoursScore.setText(R.string.long_sleeper);
-            binding.alarmTimePickerHoursCount.setText(String.format("%s %,.2f", getString(R.string.hours_of_sleep), hours_of_sleep));
+                editCycle(1);
+                updateSleepCount(1);
         });
     }
 
@@ -193,6 +143,31 @@ public class SecondFragment extends Fragment {
 
         binding.hoursPicker.setText(prepareText(currentHour));
         binding.minutesPicker.setText(prepareText(currentMinute));
+    }
+
+    private void updateSleepCount(int param) {
+        if (param == 0) {
+            if (hours_of_sleep != 0) {
+                hours_of_sleep -= (float) HOURS;
+            } else {
+                hours_of_sleep = 24 - (float) HOURS;
+            }
+        } else if (param == 1) {
+            if (hours_of_sleep != 24) {
+                hours_of_sleep += (float) HOURS;
+            } else {
+                hours_of_sleep = 0 + (float) HOURS;
+            }
+        }
+        if (hours_of_sleep == 0)
+            binding.alarmTimePickerSleepHours.setText("");
+        else if (hours_of_sleep > 0 && hours_of_sleep <= 6)
+            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.short_sleeper), hours_of_sleep));
+        else if (hours_of_sleep > 6 && hours_of_sleep <= 9)
+            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.medium_sleeper), hours_of_sleep));
+        else
+            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.long_sleeper), hours_of_sleep));
+
     }
 
     private void subtractHour() {

@@ -7,11 +7,11 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.swdp31plus.ninetyminutessleep"
+        applicationId "com.swdp31plus.ninetyminutessleep.stable"
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.2.2 - Benjamin"
+        versionName "0.2.3 - Benjamin"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
