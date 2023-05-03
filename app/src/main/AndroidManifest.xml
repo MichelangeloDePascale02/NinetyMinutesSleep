@@ -38,6 +38,7 @@
         </receiver>
 
         <service android:name=".AlarmService" />
+        <service android:name=".RescheduleAlarmsService" />
     </application>
 
 

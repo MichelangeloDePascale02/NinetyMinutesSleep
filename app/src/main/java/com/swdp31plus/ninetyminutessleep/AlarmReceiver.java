@@ -24,6 +24,7 @@ import androidx.core.app.NotificationManagerCompat;
 import java.util.Calendar;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static android.provider.MediaStore.MediaColumns.TITLE;
 
 public class AlarmReceiver extends BroadcastReceiver {
     public static final String MONDAY = "MONDAY";
@@ -133,7 +134,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void startAlarmService(Context context, Intent intent) {
         Intent intentService = new Intent(context, AlarmService.class);
-        intentService.putExtra(context.getResources().getString(R.string.alarm), intent.getStringExtra(context.getResources().getString(R.string.alarm)));
+        intentService.putExtra(TITLE, intent.getStringExtra(TITLE));
+        intentService.putExtra("Alarm", intent.getSerializableExtra("Alarm"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intentService);
         } else {

@@ -3,8 +3,10 @@ package com.swdp31plus.ninetyminutessleep.ui.main;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -45,6 +47,7 @@ import java.util.Objects;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.content.Context.ALARM_SERVICE;
+import static android.provider.MediaStore.MediaColumns.TITLE;
 
 public class AlarmListFragment extends Fragment implements DialogAddAlarmFragment.GetData {
 
@@ -56,6 +59,17 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
     private DialogAddAlarmFragment dialogAddAlarmFragment;
     private AlarmsAdapter alarmsAdapter;
     private AlarmManager alarmManager;
+
+    private BroadcastReceiver deleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("CANCEL_OBJECT")) {
+                int uniqueID = intent.getIntExtra("uniqueID", -1);
+                alarmsAdapter.removeByID(uniqueID);
+                alarmsAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     public static AlarmListFragment newInstance(int index) {
         AlarmListFragment fragment = new AlarmListFragment();
@@ -102,7 +116,7 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
         alarmsAdapter.addAll(alarms);
 
         alarmsAdapter.setOnItemClickListener(alarm -> {
-            Snackbar.make(getView(), alarm.getTime(), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(requireView(), alarm.getTime(), Snackbar.LENGTH_SHORT).show();
         });
 
         binding.alarmsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
@@ -127,10 +141,24 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter("CANCEL_OBJECT");
+        requireActivity().registerReceiver(deleteReceiver, filter);
+        alarmsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireActivity().unregisterReceiver(deleteReceiver);
+    }
+
+    @Override
     public void onDialogDismissed(String hour, String minute) {
-        scheduleAlarm(Integer.parseInt(hour), Integer.parseInt(minute));
+        Alarm alarm = new Alarm(hour, minute);
+        scheduleAlarm(alarm);
         Toast.makeText(getContext(),"Alarm set at " + hour + ":" + minute, Toast.LENGTH_LONG).show();
-        Alarm alarm = new Alarm(hour + ":" + minute);
         alarms.add(alarm);
         alarmsAdapter.add(alarm);
         alarmsAdapter.sort();
@@ -138,19 +166,20 @@ public class AlarmListFragment extends Fragment implements DialogAddAlarmFragmen
         //saveAlarms(alarms, "savedAlarms.obj");
     }
 
-    private void scheduleAlarm(int hour, int minute) {
+    private void scheduleAlarm(Alarm alarm) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarm.getHour()));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(alarm.getMinute()));
 
         // using intent I have class AlarmReceiver class which inherits
         // BroadcastReceiver
         Intent intent = new Intent(getContext(), AlarmReceiver.class);
 
-        intent.putExtra("a",hour + ":" + minute);
+        intent.putExtra(TITLE, alarm.getTime());
+        intent.putExtra("Alarm", alarm);
 
         // we call broadcast using pendingIntent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), alarm.getUniqueID(), intent, FLAG_IMMUTABLE);
 
         long time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
         if (System.currentTimeMillis() > time) {

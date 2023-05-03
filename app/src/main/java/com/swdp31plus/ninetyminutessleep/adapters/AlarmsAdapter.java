@@ -1,9 +1,11 @@
 package com.swdp31plus.ninetyminutessleep.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -65,6 +67,16 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     }
     public void remove(Alarm alarm) {
         alarmsList.remove(alarm);
+    }
+    public void removeByID(int uniqueID) {
+        for (Alarm alarm : alarmsList) {
+            Log.e("Alarm","" + uniqueID);
+            Log.e("Alarm - Adapter","" + alarm.getUniqueID());
+            if (alarm.getUniqueID() == uniqueID) {
+                alarmsList.remove(alarm);
+                Log.e("Alarm","Deleted");
+            }
+        }
     }
     public void removeAll(){
         alarmsList.clear();

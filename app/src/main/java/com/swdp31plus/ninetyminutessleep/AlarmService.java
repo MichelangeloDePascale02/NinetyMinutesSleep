@@ -1,6 +1,7 @@
 package com.swdp31plus.ninetyminutessleep;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -14,10 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.swdp31plus.ninetyminutessleep.entities.Alarm;
+
+import static android.provider.MediaStore.MediaColumns.TITLE;
+
 public class AlarmService extends Service {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
-    private NotificationCompat.Builder notification;
+    private Notification notification;
 
     @Override
     public void onCreate() {
@@ -27,30 +32,38 @@ public class AlarmService extends Service {
         mediaPlayer.setLooping(false); // TODO
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        notification = new NotificationCompat.Builder(this, "Cha_ID")
-                .setContentText("Click on the notification to cancel the alarm.")
-                .setSmallIcon(R.drawable.baseline_check_24);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Intent notificationIntent = new Intent(this, AlarmActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        String alarmTitle = "Alarm is ringing";
+        String alarmTitle = String.format("%s Alarm", intent.getStringExtra(TITLE));
+        Alarm currentAlarm = (Alarm) intent.getSerializableExtra("Alarm");
+
+        Intent notificationIntent = new Intent(this, AlarmActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, currentAlarm.getUniqueID(), notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+
+
+        notification = new NotificationCompat.Builder(this, "Cha_ID")
+                .setContentTitle(alarmTitle)
+                .setContentText("Click on the notification to cancel the alarm. " + currentAlarm.toString())
+                .setSmallIcon(R.drawable.baseline_check_24)
+                .setContentIntent(pendingIntent)
+                .build();
 
         mediaPlayer.start();
 
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        long[] pattern = {0, 150, 800, 300, 1000};
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        long[] pattern = {0, 150, 800, 300, 800};
 
         vibrator.vibrate(pattern, 0);
 
-        startForeground(1, notification.setContentTitle(alarmTitle)
-                .setContentIntent(pendingIntent)
-                .build());
+        Intent cancelIntent = new Intent("CANCEL_OBJECT");
+        intent.putExtra("uniqueID", currentAlarm.getUniqueID());
+        sendBroadcast(cancelIntent);
+
+        startForeground(1, notification);
 
         return START_STICKY;
     }
