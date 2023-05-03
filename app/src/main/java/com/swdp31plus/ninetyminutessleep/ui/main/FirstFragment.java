@@ -150,6 +150,8 @@ public class FirstFragment extends Fragment {
         sounds.add(new Sound(getString(R.string.birds), R.raw.birds));
         sounds.add(new Sound(getString(R.string.light_breeze), R.raw.light_breeze));
         sounds.add(new Sound(getString(R.string.crackling_fire), R.raw.crackling_fire));
+        //sounds.add(new Sound(getString(R.string.water_drops), R.raw.crackling_fire));
+        sounds.add(new Sound(getString(R.string.hz528), R.raw.hz_528));
 
         for (Sound sound : sounds) {
             soundsPlayers.add(new SoundPlayer(sound.getTitle(), getContext(), sound.getSoundRes()));

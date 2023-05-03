@@ -29,7 +29,7 @@
 
 
     <string name="long_sleeper">Your body and mind are thanking you for getting %1$.1f hours of sleep. Keep up the good work and continue to prioritize your rest.</string>
-    <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f Keep up the good work, but remember that there\'s always room for improvement.</string>
+    <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f hours. Keep up the good work, but remember that there\'s always room for improvement.</string>
     <string name="short_sleeper">Invest in your health and well-being by giving your body the sleep it needs to function at its best. %1$.1f hours of sleep are not enough. Try to increase your sleep time to at least six hours.</string>
 
     <string name="hours_of_sleep">Hours of sleep:</string>
@@ -45,4 +45,6 @@
     <string name="birds">Birds</string>
     <string name="light_breeze">Light Breeze</string>
     <string name="crackling_fire">Crackling Fire</string>
+    <string name="water_drops">Water Drops</string>
+    <string name="hz528">528 Hz</string>
 </resources>

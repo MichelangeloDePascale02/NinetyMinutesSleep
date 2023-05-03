@@ -79,8 +79,8 @@ public class SecondFragment extends Fragment {
 
         Date currentDate = new Date();
 
-        binding.hoursPicker.setText(""+currentDate.getHours());
-        binding.minutesPicker.setText(""+currentDate.getMinutes());
+        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
+        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
         return rootView;
     }
 
