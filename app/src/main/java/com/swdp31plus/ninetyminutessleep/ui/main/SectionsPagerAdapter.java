@@ -16,7 +16,7 @@ import com.swdp31plus.ninetyminutessleep.R;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private FirstFragment firstFragment;
+    private SoundFragment firstFragment;
     private SecondFragment secondFragment;
 
     @StringRes
@@ -33,7 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
         if (position == 0) {
-            firstFragment = FirstFragment.newInstance(position + 1);
+            firstFragment = SoundFragment.newInstance(position + 1);
             return firstFragment;
         } else if (position == 1) {
             return SecondFragment.newInstance(position + 1);
@@ -54,7 +54,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return 2;
     }
 
-    public FirstFragment getFirstFragment() {
+    public SoundFragment getFirstFragment() {
         return firstFragment;
     }
 }

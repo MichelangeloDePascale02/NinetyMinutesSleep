@@ -90,6 +90,7 @@ public class SecondFragment extends Fragment {
 
         ((MainActivity) requireActivity()).getBinding().fab.setImageResource(R.drawable.baseline_alarm_add_24);
         ((MainActivity) requireActivity()).getBinding().fab.setOnClickListener(view1 -> {
+            //Toast.makeText(getContext(), "Notification-based single-mode alarm is coming soon!", Toast.LENGTH_LONG).show();
             Calendar calendar = Calendar.getInstance();
 
             // calendar is called to get current time in hour and minute

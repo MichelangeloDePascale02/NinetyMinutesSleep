@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/first_fragment"
-    tools:context=".ui.main.FirstFragment">
+    tools:context=".ui.main.SoundFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/soundsRecyclerView"

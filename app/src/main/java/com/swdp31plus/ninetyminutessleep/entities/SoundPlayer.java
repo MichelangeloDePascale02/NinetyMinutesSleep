@@ -47,4 +47,8 @@ public class SoundPlayer {
         mp.start();
         mp.setLooping(true);
     }
+
+    public void changeMediaPlayerVolume(float volume) {
+        mp.setVolume(volume, volume);
+    }
 }

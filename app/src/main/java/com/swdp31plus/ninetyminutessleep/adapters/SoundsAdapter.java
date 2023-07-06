@@ -1,23 +1,19 @@
 package com.swdp31plus.ninetyminutessleep.adapters;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.entities.Sound;
-import com.swdp31plus.ninetyminutessleep.ui.main.FirstFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +22,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
 
     private ArrayList<Sound> soundsList;
     private OnItemClickListener onItemClickListener;
+    private OnSeekBarChangeListener onSeekBarChangeListener;
     private Context context;
     private LayoutInflater layoutInflater;
     private int[] playingStatuses;
@@ -46,7 +43,7 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
         holder.layoutSongBoxTxt.setText(sound.getTitle());
 
         holder.layoutSoundBoxCardview.setOnClickListener(v -> {
-            if(playingStatuses[position] == 0) {
+            if (playingStatuses[position] == 0) {
                 holder.layoutSongBoxImg.setImageResource(R.drawable.baseline_stop_24);
                 playingStatuses[position] = 1;
             } else {
@@ -55,6 +52,20 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
             }
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(sound);
+            }
+            if (onSeekBarChangeListener != null) {
+                holder.layoutSongBoxSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                        onSeekBarChangeListener.onSeekBarChange(sound, i);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                });
             }
         });
     }
@@ -72,12 +83,14 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
         TextView layoutSongBoxTxt;
         ShapeableImageView layoutSongBoxImg;
         CardView layoutSoundBoxCardview;
+        SeekBar layoutSongBoxSeekbar;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             layoutSongBoxTxt = itemView.findViewById(R.id.layout_song_box_text);
             layoutSongBoxImg = itemView.findViewById(R.id.layout_song_box_image);
             layoutSoundBoxCardview = itemView.findViewById(R.id.layout_song_box_cardview);
+            layoutSongBoxSeekbar = itemView.findViewById(R.id.layout_song_box_seekbar);
         }
     }
 
@@ -102,8 +115,16 @@ public class SoundsAdapter extends RecyclerView.Adapter<SoundsAdapter.ViewHolder
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setOnSeekBarChangeListener(OnSeekBarChangeListener onSeekBarChangeListener) {
+        this.onSeekBarChangeListener = onSeekBarChangeListener;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(Sound sound);
+    }
+
+    public interface OnSeekBarChangeListener {
+        void onSeekBarChange(Sound sound, int i);
     }
 
     public void createPlayingIndex(int size){

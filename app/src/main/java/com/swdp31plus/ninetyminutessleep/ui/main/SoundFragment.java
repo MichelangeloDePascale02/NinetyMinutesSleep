@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ import com.swdp31plus.ninetyminutessleep.entities.SoundPlayer;
 
 import java.util.ArrayList;
 
-public class FirstFragment extends Fragment {
+public class SoundFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private PageViewModel pageViewModel;
@@ -64,8 +63,8 @@ public class FirstFragment extends Fragment {
         return rootView;
     }
 
-    public static FirstFragment newInstance(int index) {
-        FirstFragment fragment = new FirstFragment();
+    public static SoundFragment newInstance(int index) {
+        SoundFragment fragment = new SoundFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
@@ -121,6 +120,11 @@ public class FirstFragment extends Fragment {
         soundsAdapter.setContext(getContext());
         soundsAdapter.setLayoutInflater(getLayoutInflater());
         soundsAdapter.addAll(sounds);
+
+        soundsAdapter.setOnSeekBarChangeListener((sound, i) -> {
+            int index = sounds.lastIndexOf(sound);
+            soundsPlayers.get(index).changeMediaPlayerVolume((float) i / 100);
+        });
 
         soundsAdapter.setOnItemClickListener(sound -> {
             int index = sounds.lastIndexOf(sound);
