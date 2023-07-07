@@ -41,12 +41,12 @@ public class SoundFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
+        //pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        pageViewModel.setIndex(index);
+        //pageViewModel.setIndex(index);
 
         sounds = new ArrayList<>();
         soundsPlayers = new ArrayList<>();
@@ -73,45 +73,6 @@ public class SoundFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // warning dialog building
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (preferences.getBoolean("show_warning", true)) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
-            SharedPreferences.Editor editor = preferences.edit();
-
-            LayoutInflater inflater = getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
-
-            // Set dialog title
-            View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
-            TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
-            titleText.setText(getString(R.string.warning_title));
-            titleText.setTextSize(22);
-            builder.setCustomTitle(titleView);
-
-            TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
-            textView.setText(getString(R.string.warning_text));
-
-            builder.setView(dialogView);
-
-            CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                editor.putBoolean("show_warning", !isChecked);
-                editor.apply();
-            });
-
-            Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
-
-            final AlertDialog dialog = builder.create();
-
-            closeBtn.setOnClickListener(v -> {
-                editor.apply();
-                dialog.dismiss();
-            });
-
-            dialog.show();
-        }
 
         binding.soundsRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(),2));
 
@@ -156,6 +117,13 @@ public class SoundFragment extends Fragment {
         sounds.add(new Sound(getString(R.string.crackling_fire), R.raw.crackling_fire));
         //sounds.add(new Sound(getString(R.string.water_drops), R.raw.crackling_fire));
         sounds.add(new Sound(getString(R.string.hz528), R.raw.hz_528));
+
+
+
+        sounds.add(new Sound(getString(R.string.brown_noise),  R.raw.brown_noise));
+        sounds.add(new Sound(getString(R.string.birds), R.raw.birds));
+        sounds.add(new Sound(getString(R.string.light_breeze), R.raw.light_breeze));
+        sounds.add(new Sound(getString(R.string.crackling_fire), R.raw.crackling_fire));
 
         for (Sound sound : sounds) {
             soundsPlayers.add(new SoundPlayer(sound.getTitle(), getContext(), sound.getSoundRes()));

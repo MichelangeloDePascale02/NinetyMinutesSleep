@@ -1,0 +1,19 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/firstFragment">
+
+    <fragment
+        android:id="@+id/firstFragment"
+        android:name="com.swdp31plus.ninetyminutessleep.ui.main.SoundFragment"
+        android:label="@string/sounds"
+        tools:layout="@layout/fragment_first" />
+
+    <fragment
+        android:id="@+id/secondFragment"
+        android:name="com.swdp31plus.ninetyminutessleep.ui.main.SecondFragment"
+        android:label="@string/daily_alarm"
+        tools:layout="@layout/fragment_second" />
+
+</navigation>

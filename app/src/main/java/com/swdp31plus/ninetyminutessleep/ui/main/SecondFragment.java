@@ -61,12 +61,12 @@ public class SecondFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
+        //pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        pageViewModel.setIndex(index);
+        //pageViewModel.setIndex(index);
     }
 
     @Override

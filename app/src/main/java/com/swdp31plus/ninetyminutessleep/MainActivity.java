@@ -1,24 +1,27 @@
 package com.swdp31plus.ninetyminutessleep;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
@@ -26,11 +29,15 @@ import android.widget.TextView;
 
 import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
+import com.swdp31plus.ninetyminutessleep.ui.main.SoundFragment;
+
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private NavController navController;
     private int timeoutTimerInMillis = 0;
     private SectionsPagerAdapter sectionsPagerAdapter;
 
@@ -41,14 +48,75 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        navController = Objects.requireNonNull(navHostFragment).getNavController();
+
+        Toolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.action_first:
+                    navController.navigate(R.id.firstFragment);
+                    return true;
+                case R.id.action_second:
+                    navController.navigate(R.id.secondFragment);
+                    return true;
+            }
+            return false;
+        });
+
+        NavigationUI.setupActionBarWithNavController(this, navController);
+
+        // warning dialog building
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("show_warning", true)) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
+
+            // Set dialog title
+            View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+            titleText.setText(getString(R.string.warning_title));
+            titleText.setTextSize(22);
+            builder.setCustomTitle(titleView);
+
+            TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
+            textView.setText(getString(R.string.warning_text));
+
+            builder.setView(dialogView);
+
+            CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                editor.putBoolean("show_warning", !isChecked);
+                editor.apply();
+            });
+
+            Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
+
+            final AlertDialog dialog = builder.create();
+
+            closeBtn.setOnClickListener(v -> {
+                editor.apply();
+                dialog.dismiss();
+            });
+
+            dialog.show();
+        }
+
+        /*sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = binding.fab;
 
-        fab.setVisibility(View.GONE);
+        fab.setVisibility(View.GONE);*/
 
 
 
@@ -109,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 dialogView.findViewById(R.id.button_dialog_sound_timeout).setOnClickListener(v -> {
                     timeoutTimerInMillis = ((SeekBar) dialogView.findViewById(R.id.seek_bar_sound_timeout)).getProgress();
                     dialog.dismiss();
-                    sectionsPagerAdapter.getFirstFragment().onTimeOutSet(timeoutTimerInMillis);
+                    ((SoundFragment) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.firstFragment))).onTimeOutSet(timeoutTimerInMillis);
                 });
                 dialog.show();
                 return true;
@@ -149,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.topAppBar.setNavigationOnClickListener(view -> {});
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
@@ -163,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}});
+            public void onPageScrollStateChanged(int state) {}});*/
     }
 
     @Override
@@ -176,7 +244,4 @@ public class MainActivity extends AppCompatActivity {
         return binding;
     }
 
-    public int getTimeoutTimerInMillis() {
-        return timeoutTimerInMillis;
-    }
 }
