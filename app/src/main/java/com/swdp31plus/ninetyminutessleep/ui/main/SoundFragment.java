@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.adapters.SoundsAdapter;
-import com.swdp31plus.ninetyminutessleep.databinding.FragmentFirstBinding;
+import com.swdp31plus.ninetyminutessleep.databinding.FragmentSoundBinding;
 import com.swdp31plus.ninetyminutessleep.entities.Sound;
 import com.swdp31plus.ninetyminutessleep.entities.SoundPlayer;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class SoundFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentSoundBinding binding;
     private PageViewModel pageViewModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private View rootView;
@@ -58,7 +58,7 @@ public class SoundFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentSoundBinding.inflate(inflater, container, false);
         rootView = binding.getRoot();
         return rootView;
     }
@@ -154,8 +154,16 @@ public class SoundFragment extends Fragment {
         sounds.add(new Sound(getString(R.string.birds), R.raw.birds));
         sounds.add(new Sound(getString(R.string.light_breeze), R.raw.light_breeze));
         sounds.add(new Sound(getString(R.string.crackling_fire), R.raw.crackling_fire));
-        //sounds.add(new Sound(getString(R.string.water_drops), R.raw.crackling_fire));
         sounds.add(new Sound(getString(R.string.hz528), R.raw.hz_528));
+        sounds.add(new Sound(getString(R.string.fan), R.raw.fan));
+
+        /*sounds.add(new Sound("TEST", R.raw.crackling_fire));
+        sounds.add(new Sound("TEST", R.raw.light_breeze));
+        sounds.add(new Sound("TEST", R.raw.crackling_fire));
+        sounds.add(new Sound("TEST", R.raw.light_breeze));
+        sounds.add(new Sound("TEST", R.raw.crackling_fire));
+        sounds.add(new Sound("TEST", R.raw.light_breeze));
+        sounds.add(new Sound("TEST", R.raw.crackling_fire));*/
 
         for (Sound sound : sounds) {
             soundsPlayers.add(new SoundPlayer(sound.getTitle(), getContext(), sound.getSoundRes()));
@@ -165,7 +173,6 @@ public class SoundFragment extends Fragment {
     }
 
     public void onTimeOutSet(int timeOut) {
-        Toast.makeText(getContext(),"" + timeOut, Toast.LENGTH_SHORT).show();
         Handler h = new Handler();
             Runnable stopPlaybackRun = () -> {
                 for (SoundPlayer soundPlayer : soundsPlayers) {
@@ -176,6 +183,7 @@ public class SoundFragment extends Fragment {
                 soundsAdapter.initializePlayingIndex();
             };
         h.postDelayed(stopPlaybackRun, (long) timeOut * 1000 * 60);
+        Toast.makeText(getContext(),String.format(getResources().getString(R.string.stop_sounds_timer), timeOut), Toast.LENGTH_LONG).show();
     }
 
 }

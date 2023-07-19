@@ -17,7 +17,7 @@ import com.swdp31plus.ninetyminutessleep.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private SoundFragment firstFragment;
-    private SecondFragment secondFragment;
+    private AlarmFragment secondFragment;
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
@@ -36,7 +36,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             firstFragment = SoundFragment.newInstance(position + 1);
             return firstFragment;
         } else if (position == 1) {
-            return SecondFragment.newInstance(position + 1);
+            return AlarmFragment.newInstance(position + 1);
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }

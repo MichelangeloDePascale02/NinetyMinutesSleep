@@ -11,7 +11,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "0.3.0 - Charlotte"
+        versionName "0.3.1 - Charlotte"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +40,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation "androidx.compose.material3:material3:1.0.1"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
+    implementation 'com.github.ebanx:swipe-button:0.8.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

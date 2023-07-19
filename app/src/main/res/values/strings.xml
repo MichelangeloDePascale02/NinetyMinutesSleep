@@ -47,4 +47,10 @@
     <string name="crackling_fire">Crackling Fire</string>
     <string name="water_drops">Water Drops</string>
     <string name="hz528">528 Hz</string>
+    <string name="fan">Noisy Fan</string>
+
+    <string name="stop_sounds_timer">Sounds will be stopped in %3d minutes.</string>
+
+    <string name="notification_text">Alarm is ringing!</string>
+    <string name="dismiss_to_quit">Dismiss the alarm to quit</string>
 </resources>

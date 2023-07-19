@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -12,10 +13,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private int timeoutTimerInMillis = 0;
     private SectionsPagerAdapter sectionsPagerAdapter;
+    private static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 2323;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = binding.fab;
-
-        fab.setVisibility(View.GONE);
 
 
 
@@ -154,16 +155,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    fab.setVisibility(View.GONE);
-                } else {
-                    fab.setVisibility(View.VISIBLE);
-                }
-            }
+            public void onPageSelected(int position) {}
 
             @Override
-            public void onPageScrollStateChanged(int state) {}});
+            public void onPageScrollStateChanged(int state) {}
+        });
     }
 
     @Override
@@ -178,5 +174,22 @@ public class MainActivity extends AppCompatActivity {
 
     public int getTimeoutTimerInMillis() {
         return timeoutTimerInMillis;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+            }
+
+        }
+    }
+
+    private void requestPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + this.getPackageName()));
+        startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
     }
 }
