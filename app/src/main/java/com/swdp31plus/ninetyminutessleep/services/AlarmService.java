@@ -1,33 +1,21 @@
 package com.swdp31plus.ninetyminutessleep.services;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
-import com.swdp31plus.ninetyminutessleep.NotificationActivity;
-import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.entities.Alarm;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -39,12 +27,12 @@ public class AlarmService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        createNotificationChannel();
+        //createNotificationChannel();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "String")
+        /*NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "String")
                 .setContentTitle("Title")
                 .setContentText("Content")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);*/
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     }
@@ -65,13 +53,17 @@ public class AlarmService extends Service {
 
         Log.e("Log in alarmservice", newAlarm.toString());
 
-        programmareAllarme(newAlarm);
+        if (!(intent.getStringExtra("action").equals("dismiss"))) {
+            scheduleAlarm(newAlarm);
+        } else {
+            dismissAlarm(newAlarm);
+        }
         return START_STICKY;
     }
 
-    private void programmareAllarme(NewAlarm alarm) {
+    private void scheduleAlarm(NewAlarm alarm) {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("alarm", alarm);
+        intent.putExtra("alarm", (Parcelable) alarm);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this,
@@ -80,14 +72,12 @@ public class AlarmService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Imposta l'orario per l'allarme
+        // Setting alarm time
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(alarm.getTime());
 
-        Log.e("Log in alarmservice", "" + alarm.isRecurring());
-
-        // Verifica se la sveglia è a ripetizione
-        if (alarm.isRecurring()) {
+        // Not needed for now
+        /* if (alarm.isRecurring()) {
             // Imposta l'allarme per i giorni di ripetizione specificati
             int[] giorniRipetizione = alarm.getRepeatingDays();
             for (int giorno : giorniRipetizione) {
@@ -100,13 +90,27 @@ public class AlarmService extends Service {
                 );
             }
         } else {
-            // Imposta l'allarme per un singolo giorno e orario
-            Log.e("Log in alarmservice", "Millis correnti: " + System.currentTimeMillis());
-            Log.e("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
-            Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()));
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        }
+        }*/
+
+        Log.e("Log in alarmservice", "Millis correnti: " + System.currentTimeMillis());
+        Log.e("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
+        Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()));
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void dismissAlarm(NewAlarm alarm) {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("alarm", (Parcelable) alarm);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                alarm.getId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        alarmManager.cancel(pendingIntent);
     }
 
     private List<NewAlarm> getListaSveglie() {

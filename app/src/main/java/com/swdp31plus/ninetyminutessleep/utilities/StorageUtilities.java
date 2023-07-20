@@ -51,4 +51,40 @@ public class StorageUtilities {
         }
         return readAlarmList;
     }
+    public static Object loadObject(String path, Context context) throws NullPointerException {
+        FileInputStream fis = null;
+        Object readAlarm = null;
+        try {
+            fis = context.openFileInput(path);
+            ObjectInputStream is = null;
+            try {
+                is = new ObjectInputStream(fis);
+                readAlarm = is.readObject();
+                is.close();
+                fis.close();
+            } catch (IOException | ClassNotFoundException e) {
+                Toast.makeText(context,"File not loaded", Toast.LENGTH_LONG).show();
+                throw new RuntimeException(e);
+            }
+        } catch (FileNotFoundException ignored) {
+        }
+        return readAlarm;
+    }
+    public static void saveAlarm(Object obj, String path, Context context) {
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(path, Context.MODE_PRIVATE);
+            ObjectOutputStream os = null;
+            try {
+                os = new ObjectOutputStream(fos);
+                os.writeObject(obj);
+                os.close();
+                fos.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (FileNotFoundException e) {
+            Toast.makeText(context,"File not saved", Toast.LENGTH_LONG).show();
+        }
+    }
 }

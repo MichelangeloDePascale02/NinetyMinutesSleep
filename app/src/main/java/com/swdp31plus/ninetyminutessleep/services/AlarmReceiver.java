@@ -22,7 +22,6 @@ import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Qui puoi gestire l'evento di allarme e avviare l'Activity di notifica
 
         int alarmID = intent.getIntExtra("alarmID", -1);
         NewAlarm alarm = intent.getParcelableExtra("alarm");
@@ -35,7 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Log.e("new alarm", alarm.toString());
 
-            // Avvia l'Activity di notifica
+            // Starting NotificationActivity
             Intent notificationIntent = new Intent(context, NotificationActivity.class);
             notificationIntent.putExtra("alarmID", alarm.getId());
             notificationIntent.putExtra("alarmTime", alarm.getTime());
@@ -62,10 +61,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             notificationManager.notify(alarmID, builder.build());*/
 
-            // Spegni la sveglia se è a ripetizione singola
+
             if (!alarm.isActive()) {
                 alarm.setActive(false);
-                // Aggiorna la sveglia nel modello di dati
                 updateAlarm(alarm);
             }
         }

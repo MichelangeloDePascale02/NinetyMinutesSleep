@@ -10,28 +10,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
+import java.util.Objects;
 
-public class NewAlarm implements Parcelable {
+public class NewAlarm implements Parcelable, Serializable {
     private int id;
     private Date time;
     private boolean active;
-    private boolean recurring;
-    private int[] repeatingDays;
 
-    public NewAlarm(int id, Date time, boolean active, boolean recurring, int[] repeatingDays) {
+    public NewAlarm(int id, Date time, boolean active) {
         this.id = id;
         this.time = time;
         this.active = active;
-        this.recurring = recurring;
-        this.repeatingDays = repeatingDays;
     }
 
     protected NewAlarm(Parcel in) {
         id = in.readInt();
         time = new Date(in.readLong());
         active = in.readByte() != 0;
-        recurring = in.readByte() != 0;
-        repeatingDays = in.createIntArray();
     }
 
     public static final Creator<NewAlarm> CREATOR = new Creator<NewAlarm>() {
@@ -62,13 +57,6 @@ public class NewAlarm implements Parcelable {
         this.active = active;
     }
 
-    public boolean isRecurring() {
-        return recurring;
-    }
-
-    public int[] getRepeatingDays() {
-        return repeatingDays;
-    }
 
     @Override
     public int describeContents() {
@@ -80,7 +68,23 @@ public class NewAlarm implements Parcelable {
         dest.writeInt(id);
         dest.writeLong(time.getTime());
         dest.writeByte((byte) (active ? 1 : 0));
-        dest.writeByte((byte) (recurring ? 1 : 0));
-        dest.writeIntArray(repeatingDays);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NewAlarm newAlarm = (NewAlarm) o;
+
+        if (id != newAlarm.id) return false;
+        return Objects.equals(time, newAlarm.time);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        return result;
     }
 }

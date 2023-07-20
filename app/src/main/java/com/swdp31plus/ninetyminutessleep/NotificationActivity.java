@@ -1,6 +1,7 @@
 package com.swdp31plus.ninetyminutessleep;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -19,7 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ebanx.swipebtn.OnStateChangeListener;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityNotificationBinding;
+import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,11 +55,11 @@ public class NotificationActivity extends AppCompatActivity {
 
         Log.e("Log in notificationactivity", "alarmID: " + alarmID);
 
-        SimpleDateFormat s = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-        binding.notificationText.setText("" + s.format(alarmTime.getTime()) + " - " + alarmID);
+        binding.notificationAlarmText.setText(sdf.format(alarmTime.getTime()));
 
-        // Aggiorna lo stato della sveglia nel modello di dati (se necessario)
+        StorageUtilities.saveAlarm((Serializable) null,"currentAlarm.obj",getApplicationContext());
 
         playAlarmSound();
     }
@@ -72,6 +75,7 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         ringtone = RingtoneManager.getRingtone(this, alert);
+        ringtone.setStreamType(AudioManager.STREAM_ALARM);
         ringtone.play();
 
         final long[] PATTERN = {0, 1000};

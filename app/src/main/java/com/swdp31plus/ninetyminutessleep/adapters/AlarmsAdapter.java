@@ -9,14 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.entities.Alarm;
+import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder> {
 
-    private ArrayList<Alarm> alarmsList;
+    private ArrayList<NewAlarm> alarmsList;
     private OnItemClickListener onItemClickListener;
 
     @NonNull
@@ -27,10 +31,12 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Alarm alarm = alarmsList.get(position);
-        holder.layoutAlarmRibbonTimeTxt.setText(alarm.getTime());
+        NewAlarm alarm = alarmsList.get(position);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getAvailableLocales()[0]);
+        String newAlarmTime = sdf.format(alarm.getTime());
+        holder.layoutAlarmRibbonTimeTxt.setText(newAlarmTime);
         holder.layoutAlarmRibbonCardview.setOnClickListener(v -> {
-            if (onItemClickListener != null){
+            if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(alarm);
             }
         });
@@ -56,14 +62,14 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     public AlarmsAdapter() {
         alarmsList = new ArrayList<>();
     }
-    public void add(Alarm alarm) {
+    public void add(NewAlarm alarm) {
         alarmsList.add(alarm);
     }
 
-    public void addAll(ArrayList<Alarm> alarms) {
+    public void addAll(ArrayList<NewAlarm> alarms) {
         alarmsList.addAll(alarms);
     }
-    public void remove(Alarm alarm) {
+    public void remove(NewAlarm alarm) {
         alarmsList.remove(alarm);
     }
     public void removeAll(){
@@ -75,6 +81,6 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Alarm alarm);
+        void onItemClick(NewAlarm alarm);
     }
 }

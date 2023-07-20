@@ -19,6 +19,7 @@
     <string name="github">Visit my GitHub</string>
     <string name="do_not_show_this_again">Do not show this again</string>
     <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
 
     <string name="about">About</string>
     <string name="sleep_timer_for_sounds">Add timer for sounds</string>
@@ -27,6 +28,9 @@
     <string name="error_no_browser">No suitable browsers are present to complete this action.</string>
     <string name="coming_soon">Coming soon!</string>
 
+    <string name="no_current_alarm">You don\'t have any scheduled Alarm</string>
+    <string name="current_alarm_set">An Alarm is schedule to trigger at %s</string>
+    <string name="scheduled_alarm">Scheduled Alarm</string>
 
     <string name="long_sleeper">Your body and mind are thanking you for getting %1$.1f hours of sleep. Keep up the good work and continue to prioritize your rest.</string>
     <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f hours. Keep up the good work, but remember that there\'s always room for improvement.</string>
