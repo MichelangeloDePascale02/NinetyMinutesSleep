@@ -1,6 +1,7 @@
 package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ import com.swdp31plus.ninetyminutessleep.services.AlarmService;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +50,8 @@ public class AlarmFragment extends Fragment {
     private double HOURS = 1.5;
 
     // private ArrayList<NewAlarm> alarms;
+    private Date currentDate;
+    private Calendar alarmDateCalendar;
     private NewAlarm currentAlarm;
     private int currentHour;
     private int currentMinute;
@@ -80,11 +85,6 @@ public class AlarmFragment extends Fragment {
 
         binding = FragmentAlarmBinding.inflate(inflater, container, false);
         rootView = binding.getRoot();
-
-        Date currentDate = new Date();
-
-        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
-        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
         return rootView;
     }
 
@@ -95,7 +95,12 @@ public class AlarmFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        currentDate = new Date();
+        alarmDateCalendar = Calendar.getInstance();
         currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj",getContext());
+
+        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
+        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
 
         updateAlarmStatus();
 
@@ -103,15 +108,11 @@ public class AlarmFragment extends Fragment {
             // Intent for AlarmService. Inside, there will be the alarm object
             Intent intent = new Intent(getActivity(), AlarmService.class);
 
-            Calendar thirtySecondsFromNowCalendar = Calendar.getInstance();
-            thirtySecondsFromNowCalendar.add(Calendar.SECOND,10);
-            thirtySecondsFromNowDate = thirtySecondsFromNowCalendar.getTime();
-
-            Log.e("Data", thirtySecondsFromNowDate.toString());
+            Log.e("Sono nel metodo di conferma", "Sono nel metodo di conferma" + alarmDateCalendar.getTime());
 
             NewAlarm newAlarm = new NewAlarm(
-                    (int) thirtySecondsFromNowDate.getTime(),
-                    thirtySecondsFromNowDate,
+                    (int) alarmDateCalendar.getTime().getTime(),
+                    alarmDateCalendar.getTime(),
                     false
             );
 
@@ -133,11 +134,11 @@ public class AlarmFragment extends Fragment {
             // Intent for AlarmService. Inside, there will be the alarm object
             Intent intent = new Intent(getActivity(), AlarmService.class);
 
-            Log.e("Data", thirtySecondsFromNowDate.toString());
+            Log.e("Data", currentAlarm.getTime().toString());
 
             intent.putExtra("alarm", (Parcelable) new NewAlarm(
-                            (int) thirtySecondsFromNowDate.getTime(),
-                            thirtySecondsFromNowDate,
+                            (int) currentAlarm.getTime().getTime(),
+                            currentAlarm.getTime(),
                             true
                     )
             );
@@ -177,10 +178,16 @@ public class AlarmFragment extends Fragment {
         if (param == 0) {
             subtractHour();
             subtractMinute();
+             alarmDateCalendar.add(Calendar.SECOND,-10);
+            //alarmDateCalendar.add(Calendar.MINUTE,-90);
         } else if (param == 1) {
             addHour();
             addMinute();
+             alarmDateCalendar.add(Calendar.SECOND,10);
+            //alarmDateCalendar.add(Calendar.MINUTE,90);
         }
+
+        Log.e("Sono nel metodo di modifica", "Sono nel metodo di modifica" + alarmDateCalendar.getTime().toString());
 
         binding.hoursPicker.setText(prepareText(currentHour));
         binding.minutesPicker.setText(prepareText(currentMinute));
@@ -214,7 +221,7 @@ public class AlarmFragment extends Fragment {
 
     private void updateAlarmStatus() {
         if (currentAlarm != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getAvailableLocales()[0]);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getAvailableLocales()[0]);
             binding.alarmTimePickerCurrentAlarm.setText(
                     String.format(
                             getContext().getString(R.string.current_alarm_set),
@@ -227,6 +234,7 @@ public class AlarmFragment extends Fragment {
             binding.alarmTimePickerCurrentAlarm.setText(requireContext().getString(R.string.no_current_alarm));
             binding.alarmConfirm.setVisibility(View.VISIBLE);
             binding.alarmDismiss.setVisibility(View.GONE);
+            binding.alarmTimePickerSleepHours.setText("");
         }
         StorageUtilities.saveAlarm((Serializable) currentAlarm,"currentAlarm.obj",getContext());
     }
@@ -274,7 +282,10 @@ public class AlarmFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
+        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
         currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj", requireContext());
+        alarmDateCalendar = Calendar.getInstance();
         updateAlarmStatus();
     }
 

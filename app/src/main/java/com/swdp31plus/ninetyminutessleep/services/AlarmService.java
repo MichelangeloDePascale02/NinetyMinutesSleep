@@ -51,6 +51,9 @@ public class AlarmService extends Service {
 
         NewAlarm newAlarm = intent.getParcelableExtra("alarm");
 
+        Log.e("Log in alarmservice", "Informazioni allarme");
+        Log.e("Log in alarmservice", "" + newAlarm.getId());
+        Log.e("Log in alarmservice", newAlarm.getTime().toString());
         Log.e("Log in alarmservice", newAlarm.toString());
 
         if (!(intent.getStringExtra("action").equals("dismiss"))) {
@@ -62,11 +65,11 @@ public class AlarmService extends Service {
     }
 
     private void scheduleAlarm(NewAlarm alarm) {
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
         intent.putExtra("alarm", (Parcelable) alarm);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this,
+                getApplicationContext(),
                 alarm.getId(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE

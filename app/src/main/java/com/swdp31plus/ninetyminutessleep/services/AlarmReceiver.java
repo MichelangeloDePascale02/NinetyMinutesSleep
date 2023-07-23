@@ -22,15 +22,11 @@ import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        int alarmID = intent.getIntExtra("alarmID", -1);
         NewAlarm alarm = intent.getParcelableExtra("alarm");
 
         Log.e("Log in alarmreceiver", "alarmID: " + alarm.getId());
 
         if (alarm.getId() != -1) {
-            // Recupera la sveglia dal modello di dati utilizzando l'ID
-            // NewAlarm alarm = getAlarmById(alarmID);
 
             Log.e("new alarm", alarm.toString());
 
@@ -60,23 +56,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
             }
             notificationManager.notify(alarmID, builder.build());*/
-
-
-            if (!alarm.isActive()) {
-                alarm.setActive(false);
-                updateAlarm(alarm);
-            }
         }
-    }
-
-    private NewAlarm getAlarmById(int alarmID) {
-        // Recupera la sveglia dal tuo modello di dati utilizzando l'ID
-        // Esempio: return SvegliaRepository.getSvegliaById(svegliaId);
-        return null;
-    }
-
-    private void updateAlarm(NewAlarm alarm) {
-        // Aggiorna la sveglia nel tuo modello di dati
-        // Esempio: SvegliaRepository.aggiornaSveglia(sveglia);
     }
 }

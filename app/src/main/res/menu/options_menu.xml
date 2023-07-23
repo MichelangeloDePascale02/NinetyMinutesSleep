@@ -11,6 +11,10 @@
         android:title="@string/explanation_90_title"/>
 
     <item
+        android:id="@+id/killswitch"
+        android:title="@string/killswitch"/>
+
+    <item
         android:id="@+id/about"
         android:title="@string/about"/>
 

@@ -1,7 +1,11 @@
 package com.swdp31plus.ninetyminutessleep;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,7 +22,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Parcelable;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,8 +33,14 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
+import com.swdp31plus.ninetyminutessleep.services.AlarmReceiver;
 import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
+import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
+
+import java.io.Serializable;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
-
-
 
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.about) {
@@ -145,8 +155,69 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
             }
+            if (item.getItemId() == R.id.killswitch) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
+
+                // Set dialog title
+                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+                titleText.setText(getString(R.string.killswitch_title));
+                titleText.setTextSize(22);
+                builder.setCustomTitle(titleView);
+
+                TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
+                textView.setText(getString(R.string.killswitch_text));
+
+                builder.setView(dialogView);
+
+                CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
+                checkBox.setVisibility(View.GONE);
+
+                Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
+
+                final AlertDialog dialog = builder.create();
+
+                closeBtn.setOnClickListener(v -> {
+                    dialog.dismiss();
+
+                    NewAlarm currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj", MainActivity.this);
+                    if (currentAlarm != null) {
+                        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                        intent.putExtra("alarm", (Parcelable) currentAlarm);
+
+                        Log.e("Log in alarmservice", "Informazioni allarme");
+                        Log.e("Log in alarmservice", "" + currentAlarm.getId());
+                        Log.e("Log in alarmservice", currentAlarm.getTime().toString());
+                        Log.e("Log in alarmservice", currentAlarm.toString());
+
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                getApplicationContext(),
+                                currentAlarm.getId(),
+                                intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                        );
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        alarmManager.cancel(pendingIntent);
+                        StorageUtilities.saveAlarm((Serializable) null,"currentAlarm.obj",getApplicationContext());
+                    }
+
+                    MainActivity.this.finish();
+                });
+
+                dialog.show();
+            }
             return false;
         });
+
+        Log.d("Manufacturer", Build.MANUFACTURER.toLowerCase(Locale.ROOT));
+
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 123);
+        }
 
         binding.topAppBar.setNavigationOnClickListener(view -> {});
 
@@ -176,14 +247,16 @@ public class MainActivity extends AppCompatActivity {
         return timeoutTimerInMillis;
     }
 
+
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+        if (requestCode == 123) {
             if (!Settings.canDrawOverlays(this)) {
+            } else {
+                Log.e("mainactivity", "permission granted");
             }
-
         }
     }
 
