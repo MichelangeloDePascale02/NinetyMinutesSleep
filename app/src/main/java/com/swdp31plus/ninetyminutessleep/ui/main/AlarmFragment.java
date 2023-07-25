@@ -116,6 +116,8 @@ public class AlarmFragment extends Fragment {
                     false
             );
 
+            Log.e("Log in AlarmFragment","" + (int) alarmDateCalendar.getTime().getTime());
+
             intent.putExtra("alarm", (Parcelable) newAlarm);
             intent.putExtra("action","schedule");
 

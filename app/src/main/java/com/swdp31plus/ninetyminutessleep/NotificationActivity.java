@@ -1,6 +1,8 @@
 package com.swdp31plus.ninetyminutessleep;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
@@ -8,6 +10,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -66,6 +69,14 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void playAlarmSound() {
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
+            if (!powerManager.isInteractive()){ // if screen is not already on, turn it on (get wake_lock)
+                @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE |PowerManager.SCREEN_BRIGHT_WAKE_LOCK ,"id:wakeupscreen");
+                wl.acquire(10*60*10L);
+            }
+        }
+
         alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
         if(alert == null) {
             alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
@@ -75,7 +86,9 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         ringtone = RingtoneManager.getRingtone(this, alert);
-        ringtone.setStreamType(AudioManager.STREAM_ALARM);
+        ringtone.setAudioAttributes(new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build());
         ringtone.play();
 
         final long[] PATTERN = {0, 1000};

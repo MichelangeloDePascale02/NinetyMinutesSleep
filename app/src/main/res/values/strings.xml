@@ -14,6 +14,9 @@
     <string name="killswitch_title">Alarm killswitch</string>
     <string name="killswitch_text">Pressing Ok, every saved Alarm will be deleted (useful if you found a bug!)</string>
 
+    <string name="permissions_title">Permissions needed</string>
+    <string name="permissions_text">Some permissions are required for the app to work. If you don\'t grant these permissions, the app will close itself.</string>
+
     <string name="about_title">About</string>
     <string name="about_text">Hi! I\'m a 21 years old student from Italy. This application was created as a short one-week project. In the future I hope I can improve it and add more features. If you would like to contribute, please visit my GitHub page for more informations. Or if you just want to follow me, use the links in my GitHub profile to find me on other social networks!</string>
 

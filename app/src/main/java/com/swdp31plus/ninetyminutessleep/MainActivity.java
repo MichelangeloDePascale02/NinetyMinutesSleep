@@ -22,8 +22,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,8 +41,15 @@ import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.Locale;
+import java.util.Properties;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +71,49 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
+
+        if (!Settings.canDrawOverlays(this)) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
+
+            // Set dialog title
+            View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
+            TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
+            titleText.setText(getString(R.string.permissions_title));
+            titleText.setTextSize(22);
+            builder.setCustomTitle(titleView);
+
+            TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
+            textView.setText(getString(R.string.permissions_text));
+
+            builder.setView(dialogView);
+
+            CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
+            checkBox.setVisibility(View.GONE);
+
+            Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
+
+            final AlertDialog dialog = builder.create();
+
+            dialog.setCanceledOnTouchOutside(false);
+
+            closeBtn.setOnClickListener(v -> {
+                if (isMIUI()) {
+                    try {
+                        Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+                        localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+                        localIntent.putExtra("extra_pkgname", getPackageName());
+                        startActivityForResult(localIntent, 123);
+                    } catch (Exception ignore) {}
+                }
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 123);
+                dialog.dismiss();
+            });
+            dialog.show();
+        }
 
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.about) {
@@ -212,13 +264,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        Log.d("Manufacturer", Build.MANUFACTURER.toLowerCase(Locale.ROOT));
-
-        if (!Settings.canDrawOverlays(this)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 123);
-        }
-
         binding.topAppBar.setNavigationOnClickListener(view -> {});
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -254,15 +299,36 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 123) {
             if (!Settings.canDrawOverlays(this)) {
+                MainActivity.this.finish();
             } else {
                 Log.e("mainactivity", "permission granted");
             }
         }
     }
 
-    private void requestPermission() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + this.getPackageName()));
-        startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+    public static boolean isMIUI() {
+        return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
+    }
+
+    public static String getSystemProperty(String propName) {
+        String line;
+        BufferedReader input = null;
+        try {
+            java.lang.Process p = Runtime.getRuntime().exec("getprop " + propName);
+            input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
+            line = input.readLine();
+            input.close();
+        } catch (IOException ex) {
+            return null;
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return line;
     }
 }
