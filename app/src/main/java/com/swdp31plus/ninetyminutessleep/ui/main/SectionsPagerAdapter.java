@@ -19,6 +19,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private SoundFragment firstFragment;
     private AlarmFragment secondFragment;
 
+    private NewAlarmFragment newAlarmFragment;
+
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
     private final Context mContext;
@@ -36,7 +38,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             firstFragment = SoundFragment.newInstance(position + 1);
             return firstFragment;
         } else if (position == 1) {
-            return AlarmFragment.newInstance(position + 1);
+            return NewAlarmFragment.newInstance(position + 1);
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }
