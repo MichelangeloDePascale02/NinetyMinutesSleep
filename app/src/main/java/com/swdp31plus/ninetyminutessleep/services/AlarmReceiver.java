@@ -1,23 +1,14 @@
 package com.swdp31plus.ninetyminutessleep.services;
 
-import android.Manifest;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import com.swdp31plus.ninetyminutessleep.NotificationActivity;
-import com.swdp31plus.ninetyminutessleep.R;
+import com.swdp31plus.ninetyminutessleep.ui.main.NotificationActivity;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
+
+import java.io.Serializable;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
@@ -34,6 +25,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Intent notificationIntent = new Intent(context, NotificationActivity.class);
             notificationIntent.putExtra("alarmID", alarm.getId());
             notificationIntent.putExtra("alarmTime", alarm.getTime());
+            notificationIntent.putExtra("alarmObject", (Serializable) alarm);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(notificationIntent);
 

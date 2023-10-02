@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.swdp31plus.ninetyminutessleep.R;
+import com.swdp31plus.ninetyminutessleep.ui.main.alarms.AlarmFragment;
+import com.swdp31plus.ninetyminutessleep.ui.main.alarms.NewAlarmFragment;
+import com.swdp31plus.ninetyminutessleep.ui.main.sounds.SoundFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

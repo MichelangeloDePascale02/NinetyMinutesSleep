@@ -1,7 +1,6 @@
-package com.swdp31plus.ninetyminutessleep.ui.main;
+package com.swdp31plus.ninetyminutessleep.ui.main.alarms;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -12,33 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.swdp31plus.ninetyminutessleep.MainActivity;
 import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.adapters.AlarmsAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.FragmentAlarmBinding;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 import com.swdp31plus.ninetyminutessleep.services.AlarmService;
+import com.swdp31plus.ninetyminutessleep.ui.main.PageViewModel;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
-
-import kotlin.random.Random;
 
 public class AlarmFragment extends Fragment {
 
@@ -99,8 +88,8 @@ public class AlarmFragment extends Fragment {
         alarmDateCalendar = Calendar.getInstance();
         currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj",getContext());
 
-        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
-        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
+        binding.minutesTextview.setText(prepareText(currentDate.getHours()));
+        binding.minutesTextview.setText(prepareText(currentDate.getMinutes()));
 
         updateAlarmStatus();
 
@@ -174,8 +163,8 @@ public class AlarmFragment extends Fragment {
     }
 
     private void editCycle(int param) {
-        currentHour = Integer.parseInt((String) binding.hoursPicker.getText());
-        currentMinute = Integer.parseInt((String) binding.minutesPicker.getText());
+        currentHour = Integer.parseInt((String) binding.hoursTextview.getText());
+        currentMinute = Integer.parseInt((String) binding.minutesTextview.getText());
 
         if (param == 0) {
             subtractHour();
@@ -191,8 +180,8 @@ public class AlarmFragment extends Fragment {
 
         Log.e("Sono nel metodo di modifica", "Sono nel metodo di modifica" + alarmDateCalendar.getTime().toString());
 
-        binding.hoursPicker.setText(prepareText(currentHour));
-        binding.minutesPicker.setText(prepareText(currentMinute));
+        binding.hoursTextview.setText(prepareText(currentHour));
+        binding.minutesTextview.setText(prepareText(currentMinute));
     }
 
     // 0 subtract, 1 add
@@ -212,13 +201,13 @@ public class AlarmFragment extends Fragment {
         }
 
         if (hours_of_sleep > 0 && hours_of_sleep <= 6)
-            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.short_sleeper), hours_of_sleep));
+            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.short_sleeper), hours_of_sleep));
         else if (hours_of_sleep > 6 && hours_of_sleep <= 9)
-            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.medium_sleeper), hours_of_sleep));
+            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.medium_sleeper), hours_of_sleep));
         else if (hours_of_sleep > 9 && hours_of_sleep < 24)
-            binding.alarmTimePickerSleepHours.setText(String.format(getResources().getString(R.string.long_sleeper), hours_of_sleep));
+            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.long_sleeper), hours_of_sleep));
         else
-            binding.alarmTimePickerSleepHours.setText("");
+            binding.sleepHoursSuggestionTextView.setText("");
     }
 
     private void updateAlarmStatus() {
@@ -236,7 +225,7 @@ public class AlarmFragment extends Fragment {
             binding.alarmTimePickerCurrentAlarm.setText(requireContext().getString(R.string.no_current_alarm));
             binding.alarmConfirm.setVisibility(View.VISIBLE);
             binding.alarmDismiss.setVisibility(View.GONE);
-            binding.alarmTimePickerSleepHours.setText("");
+            binding.sleepHoursSuggestionTextView.setText("");
         }
         StorageUtilities.saveAlarm((Serializable) currentAlarm,"currentAlarm.obj",getContext());
     }
@@ -284,8 +273,8 @@ public class AlarmFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        binding.hoursPicker.setText(prepareText(currentDate.getHours()));
-        binding.minutesPicker.setText(prepareText(currentDate.getMinutes()));
+        binding.hoursTextview.setText(prepareText(currentDate.getHours()));
+        binding.minutesTextview.setText(prepareText(currentDate.getMinutes()));
         currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj", requireContext());
         alarmDateCalendar = Calendar.getInstance();
         updateAlarmStatus();

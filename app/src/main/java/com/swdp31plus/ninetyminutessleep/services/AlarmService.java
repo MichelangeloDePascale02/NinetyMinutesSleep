@@ -79,26 +79,9 @@ public class AlarmService extends Service {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(alarm.getTime());
 
-        // Not needed for now
-        /* if (alarm.isRecurring()) {
-            // Imposta l'allarme per i giorni di ripetizione specificati
-            int[] giorniRipetizione = alarm.getRepeatingDays();
-            for (int giorno : giorniRipetizione) {
-                calendar.set(Calendar.DAY_OF_WEEK, giorno);
-                alarmManager.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(),
-                        AlarmManager.INTERVAL_DAY * 7,
-                        pendingIntent
-                );
-            }
-        } else {
-
-        }*/
-
         Log.e("Log in alarmservice", "Millis correnti: " + System.currentTimeMillis());
         Log.e("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
-        Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()));
+        Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
@@ -131,7 +114,7 @@ public class AlarmService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+/*
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -144,5 +127,5 @@ public class AlarmService extends Service {
         // or other notification behaviors after this
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-    }
+    }*/
 }

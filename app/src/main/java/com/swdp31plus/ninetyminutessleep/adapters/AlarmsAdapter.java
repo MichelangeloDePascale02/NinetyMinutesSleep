@@ -83,4 +83,8 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     public interface OnItemClickListener {
         void onItemClick(NewAlarm alarm);
     }
+
+    public ArrayList<NewAlarm> getAlarmsList() {
+        return this.alarmsList;
+    }
 }

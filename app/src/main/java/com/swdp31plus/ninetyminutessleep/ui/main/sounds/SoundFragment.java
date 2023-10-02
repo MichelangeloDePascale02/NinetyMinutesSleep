@@ -1,4 +1,4 @@
-package com.swdp31plus.ninetyminutessleep.ui.main;
+package com.swdp31plus.ninetyminutessleep.ui.main.sounds;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import com.swdp31plus.ninetyminutessleep.adapters.SoundsAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.FragmentSoundBinding;
 import com.swdp31plus.ninetyminutessleep.entities.Sound;
 import com.swdp31plus.ninetyminutessleep.entities.SoundPlayer;
+import com.swdp31plus.ninetyminutessleep.ui.main.PageViewModel;
 
 import java.util.ArrayList;
 

@@ -1,28 +1,20 @@
-package com.swdp31plus.ninetyminutessleep;
+package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -35,21 +27,16 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 import com.swdp31plus.ninetyminutessleep.services.AlarmReceiver;
-import com.swdp31plus.ninetyminutessleep.ui.main.SectionsPagerAdapter;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.util.Locale;
-import java.util.Properties;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -207,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
             }
-            if (item.getItemId() == R.id.killswitch) {
+            /*if (item.getItemId() == R.id.killswitch) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
 
                 LayoutInflater inflater = getLayoutInflater();
@@ -260,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 dialog.show();
-            }
+            }*/
             return false;
         });
 

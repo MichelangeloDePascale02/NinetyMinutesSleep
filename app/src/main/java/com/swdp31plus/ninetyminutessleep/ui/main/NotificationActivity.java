@@ -1,4 +1,4 @@
-package com.swdp31plus.ninetyminutessleep;
+package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,12 +21,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ebanx.swipebtn.OnStateChangeListener;
+import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityNotificationBinding;
+import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class NotificationActivity extends AppCompatActivity {
@@ -62,7 +65,15 @@ public class NotificationActivity extends AppCompatActivity {
 
         binding.notificationAlarmText.setText(sdf.format(alarmTime.getTime()));
 
-        StorageUtilities.saveAlarm((Serializable) null,"currentAlarm.obj",getApplicationContext());
+        ArrayList<NewAlarm> readFromFile = (ArrayList<NewAlarm>) StorageUtilities.loadAlarms("currentAlarm.obj", getApplicationContext());
+        if (readFromFile != null) {
+            for (NewAlarm alarm : readFromFile) {
+                Log.e("NotificationActivity","alarm# : " + alarm.toString());
+            }
+            if (readFromFile.remove(getIntent().getSerializableExtra("alarmObject"))) {
+                StorageUtilities.saveAlarm((Serializable) readFromFile,"currentAlarm.obj", getApplicationContext());
+            }
+        }
 
         playAlarmSound();
     }
