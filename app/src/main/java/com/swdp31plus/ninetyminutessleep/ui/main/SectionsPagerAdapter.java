@@ -1,6 +1,7 @@
 package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -10,7 +11,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.ui.main.alarms.AlarmFragment;
-import com.swdp31plus.ninetyminutessleep.ui.main.alarms.NewAlarmFragment;
 import com.swdp31plus.ninetyminutessleep.ui.main.sounds.SoundFragment;
 
 /**
@@ -20,9 +20,8 @@ import com.swdp31plus.ninetyminutessleep.ui.main.sounds.SoundFragment;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private SoundFragment firstFragment;
-    private AlarmFragment secondFragment;
 
-    private NewAlarmFragment newAlarmFragment;
+    private AlarmFragment newAlarmFragment;
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
@@ -41,7 +40,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             firstFragment = SoundFragment.newInstance(position + 1);
             return firstFragment;
         } else if (position == 1) {
-            return NewAlarmFragment.newInstance(position + 1);
+            newAlarmFragment = AlarmFragment.newInstance(position + 1);
+            return newAlarmFragment;
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }

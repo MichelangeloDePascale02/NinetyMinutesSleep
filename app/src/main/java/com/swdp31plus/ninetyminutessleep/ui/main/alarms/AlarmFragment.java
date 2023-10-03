@@ -1,6 +1,5 @@
 package com.swdp31plus.ninetyminutessleep.ui.main.alarms;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -13,39 +12,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.databinding.FragmentAlarmBinding;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.swdp31plus.ninetyminutessleep.adapters.AlarmsAdapter;
+import com.swdp31plus.ninetyminutessleep.databinding.FragmentNewAlarmBinding;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 import com.swdp31plus.ninetyminutessleep.services.AlarmService;
+import com.swdp31plus.ninetyminutessleep.ui.fragments.alarms.CreateAlarmDialog;
 import com.swdp31plus.ninetyminutessleep.ui.main.PageViewModel;
 import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
+import com.swdp31plus.ninetyminutessleep.utilities.ValuesUtilities;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
-public class AlarmFragment extends Fragment {
-
-    private FragmentAlarmBinding binding;
+public class AlarmFragment extends Fragment implements CreateAlarmDialog.CommunicationInterface {
+    private FragmentNewAlarmBinding binding;
     private PageViewModel pageViewModel;
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
     private View rootView;
-    private double HOURS = 1.5;
+    private AlarmsAdapter alarmsAdapter;
+    private ArrayList<NewAlarm> readFromFile;
+    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
 
-    // private ArrayList<NewAlarm> alarms;
-    private Date currentDate;
-    private Calendar alarmDateCalendar;
-    private NewAlarm currentAlarm;
-    private int currentHour;
-    private int currentMinute;
-    private double hours_of_sleep = 0;
-
+    private static final String ARG_SECTION_NUMBER = "section_number";
     public static AlarmFragment newInstance(int index) {
         AlarmFragment fragment = new AlarmFragment();
         Bundle bundle = new Bundle();
@@ -65,6 +59,7 @@ public class AlarmFragment extends Fragment {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+        alarmsAdapter = new AlarmsAdapter();
     }
 
     @Override
@@ -72,213 +67,89 @@ public class AlarmFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        binding = FragmentAlarmBinding.inflate(inflater, container, false);
+        binding = FragmentNewAlarmBinding.inflate(inflater, container, false);
         rootView = binding.getRoot();
         return rootView;
     }
 
-    Date thirtySecondsFromNowDate; // remove
-
-
-    @SuppressLint({"SimpleDateFormat", "DefaultLocale", "QueryPermissionsNeeded"})
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        currentDate = new Date();
-        alarmDateCalendar = Calendar.getInstance();
-        currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj",getContext());
+        readFromFile = (ArrayList<NewAlarm>) StorageUtilities.loadAlarms("currentAlarm.obj", requireContext());
 
-        binding.minutesTextview.setText(prepareText(currentDate.getHours()));
-        binding.minutesTextview.setText(prepareText(currentDate.getMinutes()));
-
-        updateAlarmStatus();
-
-        binding.alarmConfirm.setOnClickListener(view14 -> {
-            // Intent for AlarmService. Inside, there will be the alarm object
-            Intent intent = new Intent(getActivity(), AlarmService.class);
-
-            Log.e("Sono nel metodo di conferma", "Sono nel metodo di conferma" + alarmDateCalendar.getTime());
-
-            NewAlarm newAlarm = new NewAlarm(
-                    (int) alarmDateCalendar.getTime().getTime(),
-                    alarmDateCalendar.getTime(),
-                    false
-            );
-
-            Log.e("Log in AlarmFragment","" + (int) alarmDateCalendar.getTime().getTime());
-
-            intent.putExtra("alarm", (Parcelable) newAlarm);
-            intent.putExtra("action","schedule");
-
-            currentAlarm = newAlarm;
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(getContext())) {
-                Intent permissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse(requireActivity().getPackageName()));
-                startActivityForResult(permissionIntent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+        if (readFromFile != null)
+        {
+            alarmsAdapter.addAll(readFromFile);
+            for (NewAlarm alarm : readFromFile) {
+                Log.e("NewAlarmDialog","alarm# : " + alarm.toString());
             }
-            updateAlarmStatus();
-            requireActivity().startService(intent);
+        }
+
+        binding.alarmListLiterallyRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+
+        binding.alarmListToDialogNewAlarmButton.setOnClickListener(v -> {
+            CreateAlarmDialog dataPickerForAlarmDialog = new CreateAlarmDialog();
+            dataPickerForAlarmDialog.setListener(this);
+            dataPickerForAlarmDialog.show(getParentFragmentManager(), "dataPickerForAlarmDialog");
         });
-
-        binding.alarmDismiss.setOnClickListener(view14 -> {
-            // Intent for AlarmService. Inside, there will be the alarm object
-            Intent intent = new Intent(getActivity(), AlarmService.class);
-
-            Log.e("Data", currentAlarm.getTime().toString());
-
-            intent.putExtra("alarm", (Parcelable) new NewAlarm(
-                            (int) currentAlarm.getTime().getTime(),
-                            currentAlarm.getTime(),
-                            true
-                    )
-            );
-            intent.putExtra("action","dismiss");
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(getContext())) {
-                Intent permissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse(requireActivity().getPackageName()));
-                startActivityForResult(permissionIntent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            }
-            currentAlarm = null;
-            updateAlarmStatus();
-
-            requireActivity().startService(intent);
+        alarmsAdapter.setOnItemClickListener(alarm -> {
+            MaterialAlertDialogBuilder confirmDialogBuilder = new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Title")
+                    .setMessage("Do you really want to whatever?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton("YES", (dialog, which) -> {
+                        iPromiseItWillBeGone(alarm, ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_DISMISS);
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+            confirmDialogBuilder.create().show();
         });
-
-        binding.alarmTimePickerMinus.setOnClickListener(view12 -> {
-                editCycle(0);
-                updateSleepCount(0);
-            });
-        binding.alarmTimePickerPlus.setOnClickListener(view13 -> {
-                editCycle(1);
-                updateSleepCount(1);
-        });
+        binding.alarmListLiterallyRV.setAdapter(alarmsAdapter);
     }
 
+    //TODO: refactor to get a NewAlarm object in input and to generalize the method
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onTimeSelected(Date alarmDate) {
+        NewAlarm newAlarm = new NewAlarm((int) alarmDate.getTime(), alarmDate,false);
+        iPromiseItWillBeGone(newAlarm, ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_SCHEDULE);
     }
 
-    private void editCycle(int param) {
-        currentHour = Integer.parseInt((String) binding.hoursTextview.getText());
-        currentMinute = Integer.parseInt((String) binding.minutesTextview.getText());
-
-        if (param == 0) {
-            subtractHour();
-            subtractMinute();
-             alarmDateCalendar.add(Calendar.SECOND,-10);
-            //alarmDateCalendar.add(Calendar.MINUTE,-90);
-        } else if (param == 1) {
-            addHour();
-            addMinute();
-             alarmDateCalendar.add(Calendar.SECOND,10);
-            //alarmDateCalendar.add(Calendar.MINUTE,90);
+    private void iPromiseItWillBeGone(NewAlarm alarm, String action) {
+        Intent intent = new Intent(getActivity(), AlarmService.class);
+        intent.putExtra("alarm", (Parcelable) alarm);
+        intent.putExtra("action", action);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(getContext())) {
+            Intent permissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse(requireActivity().getPackageName()));
+            startActivityForResult(permissionIntent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
         }
-
-        Log.e("Sono nel metodo di modifica", "Sono nel metodo di modifica" + alarmDateCalendar.getTime().toString());
-
-        binding.hoursTextview.setText(prepareText(currentHour));
-        binding.minutesTextview.setText(prepareText(currentMinute));
-    }
-
-    // 0 subtract, 1 add
-    private void updateSleepCount(int param) {
-        if (param == 0) {
-            if (hours_of_sleep != 0) {
-                hours_of_sleep -= (float) HOURS;
-            } else {
-                hours_of_sleep = 24 - (float) HOURS;
-            }
-        } else if (param == 1) {
-            if (hours_of_sleep != 24) {
-                hours_of_sleep += (float) HOURS;
-            } else {
-                hours_of_sleep = 0 + (float) HOURS;
-            }
-        }
-
-        if (hours_of_sleep > 0 && hours_of_sleep <= 6)
-            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.short_sleeper), hours_of_sleep));
-        else if (hours_of_sleep > 6 && hours_of_sleep <= 9)
-            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.medium_sleeper), hours_of_sleep));
-        else if (hours_of_sleep > 9 && hours_of_sleep < 24)
-            binding.sleepHoursSuggestionTextView.setText(String.format(getResources().getString(R.string.long_sleeper), hours_of_sleep));
-        else
-            binding.sleepHoursSuggestionTextView.setText("");
-    }
-
-    private void updateAlarmStatus() {
-        if (currentAlarm != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getAvailableLocales()[0]);
-            binding.alarmTimePickerCurrentAlarm.setText(
-                    String.format(
-                            getContext().getString(R.string.current_alarm_set),
-                            sdf.format(currentAlarm.getTime())
-                    )
-            );
-            binding.alarmConfirm.setVisibility(View.GONE);
-            binding.alarmDismiss.setVisibility(View.VISIBLE);
+        if (action.equals(ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_SCHEDULE)) {
+            alarmsAdapter.add(alarm);
+        } else if (action.equals(ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_DISMISS)) {
+            alarmsAdapter.remove(alarm);
         } else {
-            binding.alarmTimePickerCurrentAlarm.setText(requireContext().getString(R.string.no_current_alarm));
-            binding.alarmConfirm.setVisibility(View.VISIBLE);
-            binding.alarmDismiss.setVisibility(View.GONE);
-            binding.sleepHoursSuggestionTextView.setText("");
-        }
-        StorageUtilities.saveAlarm((Serializable) currentAlarm,"currentAlarm.obj",getContext());
-    }
 
-    private void subtractHour() {
-        if (currentHour > 0)
-            currentHour--;
-        else
-            currentHour = 23;
-    }
-
-    private void subtractMinute() {
-        if (currentMinute > 30)
-            currentMinute -= 30;
-        else {
-            currentMinute += 30;
-            subtractHour();
         }
-    }
+        alarmsAdapter.notifyDataSetChanged();
+        StorageUtilities.saveAlarms(alarmsAdapter.getAlarmsList(),"currentAlarm.obj", requireContext());
 
-    private void addHour() {
-        if (currentHour < 23)
-            currentHour++;
-        else
-            currentHour = 0;
-    }
-    private void addMinute() {
-        if (currentMinute < 30)
-            currentMinute += 30;
-        else {
-            currentMinute -= 30;
-            addHour();
-        }
-    }
-
-    private String prepareText(int value) {
-        StringBuilder builder = new StringBuilder();
-        if (value < 10) {
-            builder.append("0");
-        }
-        builder.append(value);
-        return builder.toString();
+        requireActivity().startService(intent);
     }
 
     @Override
     public void onResume() {
+        readFromFile = (ArrayList<NewAlarm>) StorageUtilities.loadAlarms("currentAlarm.obj", requireContext());
+
+        if (readFromFile != null)
+        {
+            alarmsAdapter.removeAll();
+            alarmsAdapter.addAll(readFromFile);
+            for (NewAlarm alarm : readFromFile) {
+                Log.e("NewAlarmDialog","alarm# : " + alarm.toString());
+            }
+            alarmsAdapter.notifyDataSetChanged();
+        }
         super.onResume();
-        binding.hoursTextview.setText(prepareText(currentDate.getHours()));
-        binding.minutesTextview.setText(prepareText(currentDate.getMinutes()));
-        currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj", requireContext());
-        alarmDateCalendar = Calendar.getInstance();
-        updateAlarmStatus();
     }
-
-
 }

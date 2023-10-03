@@ -100,7 +100,7 @@ public class NotificationActivity extends AppCompatActivity {
         ringtone.setAudioAttributes(new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .build());
-        ringtone.play();
+        //ringtone.play();
 
         final long[] PATTERN = {0, 1000};
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);

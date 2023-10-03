@@ -5,7 +5,7 @@
     "kind": "Directory"
   },
   "applicationId": "com.swdp31plus.ninetyminutessleep",
-  "variantName": "release",
+  "variantName": "debug",
   "elements": [
     {
       "type": "SINGLE",
@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 1,
       "versionName": "0.4.6 - Daniel",
-      "outputFile": "app-release.apk"
+      "outputFile": "app-debug.apk"
     }
   ],
   "elementType": "File"

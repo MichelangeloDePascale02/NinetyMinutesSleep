@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -194,60 +195,26 @@ public class MainActivity extends AppCompatActivity {
 
                 dialog.show();
             }
-            /*if (item.getItemId() == R.id.killswitch) {
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
+            if (item.getItemId() == R.id.bug) {
+                String phoneInfo ="Debug-infos:";
+                phoneInfo += "\n OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")";
+                phoneInfo += "\n OS API Level: " + android.os.Build.VERSION.SDK_INT;
+                phoneInfo += "\n Device: " + android.os.Build.DEVICE;
+                phoneInfo += "\n Model (and Product): " + android.os.Build.MODEL + " ("+ android.os.Build.PRODUCT + ")";
 
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_tutorial_information,null);
+                Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
+                emailSelectorIntent.setData(Uri.parse("mailto:"));
 
-                // Set dialog title
-                View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
-                TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
-                titleText.setText(getString(R.string.killswitch_title));
-                titleText.setTextSize(22);
-                builder.setCustomTitle(titleView);
+                final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ninetyminutessleep90@gmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.bug_found_mail));
+                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                emailIntent.putExtra(Intent.EXTRA_TEXT, phoneInfo + "\n\n" + "---Please do not delete the text before---\n\n");
+                emailIntent.setSelector(emailSelectorIntent);
 
-                TextView textView = dialogView.findViewById(R.id.text_view_dialog_tutorial_information);
-                textView.setText(getString(R.string.killswitch_text));
-
-                builder.setView(dialogView);
-
-                CheckBox checkBox = dialogView.findViewById(R.id.check_box_dialog_tutorial_information);
-                checkBox.setVisibility(View.GONE);
-
-                Button closeBtn = dialogView.findViewById(R.id.button_dialog_tutorial_information);
-
-                final AlertDialog dialog = builder.create();
-
-                closeBtn.setOnClickListener(v -> {
-                    dialog.dismiss();
-
-                    NewAlarm currentAlarm = (NewAlarm) StorageUtilities.loadObject("currentAlarm.obj", MainActivity.this);
-                    if (currentAlarm != null) {
-                        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-                        intent.putExtra("alarm", (Parcelable) currentAlarm);
-
-                        Log.e("Log in alarmservice", "Informazioni allarme");
-                        Log.e("Log in alarmservice", "" + currentAlarm.getId());
-                        Log.e("Log in alarmservice", currentAlarm.getTime().toString());
-                        Log.e("Log in alarmservice", currentAlarm.toString());
-
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                                getApplicationContext(),
-                                currentAlarm.getId(),
-                                intent,
-                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-                        );
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        alarmManager.cancel(pendingIntent);
-                        StorageUtilities.saveAlarm((Serializable) null,"currentAlarm.obj",getApplicationContext());
-                    }
-
-                    MainActivity.this.finish();
-                });
-
-                dialog.show();
-            }*/
+                startActivity(emailIntent);
+            }
             return false;
         });
 
@@ -271,15 +238,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public ActivityMainBinding getBinding() {
-        return binding;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+        /*MenuItem register = menu.findItem(R.id.sleep_timer_for_sounds);
+        if(getSupportFragmentManager().findFragmentByTag().getClass().getSimpleName();)
+        {
+            register.setVisible(false);
+        }
+        else
+        {
+            register.setVisible(true);
+        }
+        return true;*/
     }
-
-    public int getTimeoutTimerInMillis() {
-        return timeoutTimerInMillis;
-    }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
