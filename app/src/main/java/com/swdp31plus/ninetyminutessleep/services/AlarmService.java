@@ -1,5 +1,6 @@
 package com.swdp31plus.ninetyminutessleep.services;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.Log;
@@ -48,11 +50,15 @@ public class AlarmService extends Service {
                 programmareAllarme(sveglia);
             }
         }*/
+        NewAlarm newAlarm = null;
 
-        NewAlarm newAlarm = intent.getParcelableExtra("alarm");
+        try {
+            newAlarm = intent.getParcelableExtra("alarm");
+        } catch (Exception e) {
+        }
 
         Log.e("Log in alarmservice", "Informazioni allarme");
-        Log.e("Log in alarmservice", "" + newAlarm.getId());
+        Log.e("Log in alarmservice", "ID Allarme: " + newAlarm.getId());
         Log.e("Log in alarmservice", newAlarm.getTime().toString());
         Log.e("Log in alarmservice", newAlarm.toString());
 
@@ -61,9 +67,10 @@ public class AlarmService extends Service {
         } else {
             dismissAlarm(newAlarm);
         }
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     private void scheduleAlarm(NewAlarm alarm) {
         Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
         intent.putExtra("alarm", (Parcelable) alarm);
@@ -83,7 +90,11 @@ public class AlarmService extends Service {
         Log.e("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
         Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Log.e("Log in alarmservice", "Può schedulare? " + alarmManager.canScheduleExactAlarms());
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void dismissAlarm(NewAlarm alarm) {

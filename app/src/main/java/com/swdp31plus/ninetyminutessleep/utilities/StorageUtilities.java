@@ -1,6 +1,7 @@
 package com.swdp31plus.ninetyminutessleep.utilities;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
@@ -47,7 +48,7 @@ public class StorageUtilities {
                 throw new RuntimeException(e);
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(context,"File not loaded", Toast.LENGTH_LONG).show();
+            Log.w("Log in StorageUtilities", "File not loaded");
         }
         return readAlarmList;
     }
@@ -63,7 +64,7 @@ public class StorageUtilities {
                 is.close();
                 fis.close();
             } catch (IOException | ClassNotFoundException e) {
-                Toast.makeText(context,"File not loaded", Toast.LENGTH_LONG).show();
+                Log.w("Log in StorageUtilities", "File not loaded");
                 throw new RuntimeException(e);
             }
         } catch (FileNotFoundException ignored) {

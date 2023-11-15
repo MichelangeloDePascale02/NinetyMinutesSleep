@@ -64,8 +64,8 @@ public class CreateAlarmDialog extends DialogFragment {
         root.findViewById(R.id.alarmTimePickerMinus).setOnClickListener(view12 -> {
             timeIterations--;
             sleepHours -= 1.5;
-            //alarmTime.setMinutes(alarmTime.getMinutes() - 90);
-            alarmTime.setMinutes(alarmTime.getMinutes() - 1);
+            alarmTime.setMinutes(alarmTime.getMinutes() - 90);
+            //alarmTime.setMinutes(alarmTime.getMinutes() - 1);
             //alarmTime.setSeconds(alarmTime.getSeconds() - 10);
             Log.e("CreateAlarmDialog","Rimossi 90 minuti: " + currentTime.toString());
             Log.e("CreateAlarmDialog","Contatore diminuito a: " + timeIterations);
@@ -76,8 +76,8 @@ public class CreateAlarmDialog extends DialogFragment {
         root.findViewById(R.id.alarmTimePickerPlus).setOnClickListener(view13 -> {
             timeIterations++;
             sleepHours += 1.5;
-            //alarmTime.setMinutes(alarmTime.getMinutes() + 90);
-            alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+            alarmTime.setMinutes(alarmTime.getMinutes() + 90);
+            //alarmTime.setMinutes(alarmTime.getMinutes() + 1);
             //alarmTime.setSeconds(alarmTime.getSeconds() + 10);
             Log.e("CreateAlarmDialog","Aggiunti 90 minuti: " + currentTime.toString());
             Log.e("CreateAlarmDialog","Contatore aumentato a: " + timeIterations);

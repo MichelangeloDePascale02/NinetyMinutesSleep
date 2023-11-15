@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.swdp31plus.ninetyminutessleep",
+  "applicationId": "com.mdpsolutions.ninetyminutessleep",
   "variantName": "release",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "attributes": [],
       "versionCode": 1,
-      "versionName": "0.4.6 - Daniel",
+      "versionName": "0.5.0 - Emma",
       "outputFile": "app-release.apk"
     }
   ],

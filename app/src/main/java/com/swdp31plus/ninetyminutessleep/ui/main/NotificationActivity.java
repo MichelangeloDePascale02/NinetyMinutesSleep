@@ -2,6 +2,8 @@ package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ebanx.swipebtn.OnStateChangeListener;
@@ -80,7 +83,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void playAlarmSound() {
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
             if (!powerManager.isInteractive()){ // if screen is not already on, turn it on (get wake_lock)
                 @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |PowerManager.ON_AFTER_RELEASE |PowerManager.SCREEN_BRIGHT_WAKE_LOCK ,"id:wakeupscreen");
@@ -88,11 +91,23 @@ public class NotificationActivity extends AppCompatActivity {
             }
         }
 
-        alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
-        if(alert == null) {
-            alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
+        SharedPreferences preferences = getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);
+        String selectedRingtoneName = preferences.getString("selectedRingtoneName",null);
+        String selectedRingtoneUri = preferences.getString("selectedRingtoneUri",null);
+        String selectedMp3Uri = preferences.getString("selectedMp3Uri",null);
+
+        /*if (!(selectedRingtoneUri == null) && !(selectedRingtoneName == null)) {
+            alert = Uri.parse(selectedRingtoneUri);
+        }*/
+        if (!(selectedMp3Uri == null)){
+            alert = Uri.parse(selectedMp3Uri);
+        } else {
+            alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
             if(alert == null) {
-                alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
+                alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
+                if(alert == null) {
+                    alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
+                }
             }
         }
 
@@ -100,7 +115,12 @@ public class NotificationActivity extends AppCompatActivity {
         ringtone.setAudioAttributes(new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .build());
-        //ringtone.play();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            // Using AudioManager, this code should set the alarm volume using the system value
+            AudioManager am = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            ringtone.setVolume(normalizeToFloat(am.getStreamVolume(AudioManager.STREAM_ALARM)));
+        }
+        ringtone.play();
 
         final long[] PATTERN = {0, 1000};
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
@@ -128,6 +148,21 @@ public class NotificationActivity extends AppCompatActivity {
         ringtone.stop();
         vibrator.cancel();
         finish();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //Just don't do anything.
+        }
+    }
+
+    private float normalizeToFloat(int value) {
+        value = Math.max(0, Math.min(value, 15));
+        float range = 15;
+        return value / range;
     }
 }
 

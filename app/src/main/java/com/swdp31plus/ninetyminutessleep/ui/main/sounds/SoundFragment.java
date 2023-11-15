@@ -1,5 +1,7 @@
 package com.swdp31plus.ninetyminutessleep.ui.main.sounds;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,7 +78,7 @@ public class SoundFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // warning dialog building
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences preferences = getActivity().getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);
         if (preferences.getBoolean("show_warning", true)) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
             SharedPreferences.Editor editor = preferences.edit();

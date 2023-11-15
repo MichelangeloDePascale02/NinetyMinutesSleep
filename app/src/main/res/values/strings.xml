@@ -21,6 +21,7 @@
     <string name="about_text">Hi! I\'m a 21 years old student from Italy. This application was created as a short one-week project. In the future I hope I can improve it and add more features. If you would like to contribute, please visit my GitHub page for more informations. Or if you just want to follow me, use the links in my GitHub profile to find me on other social networks!</string>
 
     <string name="timeout_title">Set timeout time</string>
+    <string name="ringtone_title">Set ringtone</string>
 
     <string name="ok">OK</string>
     <string name="understood">Ok, I understood.</string>
@@ -65,6 +66,7 @@
     <string name="stop_sounds_timer">Sounds will be stopped in %3d minutes.</string>
 
     <string name="new_alarm">Create new alarm</string>
+    <string name="set_cycle_duration">Set cycle duration</string>
 
     <string name="notification_text">Alarm is ringing!</string>
     <string name="dismiss_to_quit">Dismiss the alarm to quit</string>

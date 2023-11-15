@@ -1,9 +1,6 @@
 package com.swdp31plus.ninetyminutessleep.ui.main;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,13 +12,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,15 +24,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
-import com.swdp31plus.ninetyminutessleep.services.AlarmReceiver;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
-import com.swdp31plus.ninetyminutessleep.utilities.StorageUtilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -133,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             } else if (item.getItemId() == R.id.sleep_timer_for_sounds) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_sound_timeout,null);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_numerical_slider_120,null);
                 // Set dialog title
                 View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
                 TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
@@ -142,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 builder.setCustomTitle(titleView);
                 builder.setView(dialogView);
 
-                ((SeekBar) dialogView.findViewById(R.id.seek_bar_sound_timeout)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                ((SeekBar) dialogView.findViewById(R.id.seek_bar_number_timeout)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @SuppressLint("DefaultLocale")
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        ((TextView) dialogView.findViewById(R.id.text_view_sound_timeout)).setText(String.format("%d %s", i, getString(R.string.minutes)));
+                        ((TextView) dialogView.findViewById(R.id.text_view_number_timeout)).setText(String.format("%d %s", i, getString(R.string.minutes)));
                     }
 
                     @Override
@@ -157,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
                 final AlertDialog dialog = builder.create();
 
-                dialogView.findViewById(R.id.button_dialog_sound_timeout).setOnClickListener(v -> {
-                    timeoutTimerInMillis = ((SeekBar) dialogView.findViewById(R.id.seek_bar_sound_timeout)).getProgress();
+                dialogView.findViewById(R.id.button_dialog_set_timeout).setOnClickListener(v -> {
+                    timeoutTimerInMillis = ((SeekBar) dialogView.findViewById(R.id.seek_bar_number_timeout)).getProgress();
                     dialog.dismiss();
                     sectionsPagerAdapter.getFirstFragment().onTimeOutSet(timeoutTimerInMillis);
                 });

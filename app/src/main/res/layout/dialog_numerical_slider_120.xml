@@ -5,14 +5,14 @@
     android:orientation="vertical">
 
     <SeekBar
-        android:id="@+id/seek_bar_sound_timeout"
+        android:id="@+id/seek_bar_number_timeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="120"
         android:layout_marginHorizontal="20dp"/>
 
     <TextView
-        android:id="@+id/text_view_sound_timeout"
+        android:id="@+id/text_view_number_timeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
@@ -22,7 +22,7 @@
         />
 
     <Button
-        android:id="@+id/button_dialog_sound_timeout"
+        android:id="@+id/button_dialog_set_timeout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
