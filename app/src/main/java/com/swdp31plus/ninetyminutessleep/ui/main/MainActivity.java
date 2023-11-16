@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.swdp31plus.ninetyminutessleep.BuildConfig;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
 
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
 
+        binding.floatingActionButtonGlobal.setVisibility(View.GONE);
+
         binding.topAppBar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.about) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
@@ -103,7 +107,26 @@ public class MainActivity extends AppCompatActivity {
                 TextView titleText = titleView.findViewById(R.id.dialog_generic_title);
                 titleText.setText(getApplicationContext().getString(R.string.about_title));
                 TextView textView = dialogView.findViewById(R.id.text_view_dialog_about);
-                textView.setText(getString(R.string.about_text));
+
+                String aboutText = new StringBuilder()
+                        .append(getString(R.string.about_text))
+                        .append("\n\nVersion info: ")
+                        .append(BuildConfig.VERSION_NAME)
+                        .toString();
+
+                if(BuildConfig.DEBUG) {
+                    aboutText = new StringBuilder()
+                            .append(aboutText)
+                            .append(" - DEBUG")
+                            .toString();
+                } else {
+                    aboutText = new StringBuilder()
+                            .append(aboutText)
+                            .append(" - RELEASE")
+                            .toString();
+                }
+
+                textView.setText(aboutText);
                 titleText.setTextSize(22);
                 builder.setCustomTitle(titleView);
                 builder.setView(dialogView);
@@ -213,10 +236,17 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
-            public void onPageSelected(int position) {}
+            public void onPageSelected(int position) {
+                if (position == 1) {
+                    binding.floatingActionButtonGlobal.setVisibility(View.VISIBLE);
+                } else {
+                    binding.floatingActionButtonGlobal.setVisibility(View.GONE);
+                }
+            }
 
             @Override
             public void onPageScrollStateChanged(int state) {}
@@ -280,5 +310,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return line;
+    }
+
+    public FloatingActionButton getGlobalFAB() {
+        return binding.floatingActionButtonGlobal;
     }
 }

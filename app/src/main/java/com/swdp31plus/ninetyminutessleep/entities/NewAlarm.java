@@ -1,5 +1,6 @@
 package com.swdp31plus.ninetyminutessleep.entities;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,7 +16,9 @@ import java.util.Objects;
 public class NewAlarm implements Parcelable, Serializable {
     private int id;
     private Date time;
+    private String title;
     private boolean active;
+    private Uri ringtoneUri;
 
     public NewAlarm(int id, Date time, boolean active) {
         this.id = id;
@@ -27,6 +30,7 @@ public class NewAlarm implements Parcelable, Serializable {
         id = in.readInt();
         time = new Date(in.readLong());
         active = in.readByte() != 0;
+        title = in.readString();
     }
 
     public static final Creator<NewAlarm> CREATOR = new Creator<NewAlarm>() {
@@ -57,6 +61,21 @@ public class NewAlarm implements Parcelable, Serializable {
         this.active = active;
     }
 
+    public Uri getRingtoneUri() {
+        return ringtoneUri;
+    }
+
+    public void setRingtoneUri(Uri ringtoneUri) {
+        this.ringtoneUri = ringtoneUri;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Override
     public int describeContents() {
@@ -68,6 +87,7 @@ public class NewAlarm implements Parcelable, Serializable {
         dest.writeInt(id);
         dest.writeLong(time.getTime());
         dest.writeByte((byte) (active ? 1 : 0));
+        dest.writeString(title);
     }
 
     @Override

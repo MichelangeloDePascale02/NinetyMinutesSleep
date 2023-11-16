@@ -41,4 +41,15 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_global"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/baseline_add_24"
+        app:layout_anchorGravity="bottom|right|end"
+        />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

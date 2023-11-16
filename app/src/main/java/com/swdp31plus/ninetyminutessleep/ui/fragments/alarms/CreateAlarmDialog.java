@@ -1,11 +1,16 @@
 package com.swdp31plus.ninetyminutessleep.ui.fragments.alarms;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.swdp31plus.ninetyminutessleep.R;
+import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 
 import java.util.Date;
 
@@ -29,6 +35,7 @@ public class CreateAlarmDialog extends DialogFragment {
 
     public interface CommunicationInterface {
         void onTimeSelected(Date alarmDate);
+        void onTimeSelected(NewAlarm newAlarm);
     }
 
     public void setListener(CommunicationInterface listener) {this.listener = listener; }
@@ -61,33 +68,45 @@ public class CreateAlarmDialog extends DialogFragment {
         alarmTime = currentTime;
         time(currentTime);
 
+        SharedPreferences preferences = getContext().getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);
+        float selectedInterval = preferences.getInt("selectedInterval",90);
+        float sleepHoursModifier = selectedInterval / 60;
+
+        Log.d("Log in CreateAlarmDialog", "selectedInterval è " + selectedInterval + " e quindi sleepHoursModifier è " + sleepHoursModifier);
+
         root.findViewById(R.id.alarmTimePickerMinus).setOnClickListener(view12 -> {
             timeIterations--;
-            sleepHours -= 1.5;
-            alarmTime.setMinutes(alarmTime.getMinutes() - 90);
+            sleepHours -= sleepHoursModifier;
+            alarmTime.setMinutes(alarmTime.getMinutes() - (int) selectedInterval);
             //alarmTime.setMinutes(alarmTime.getMinutes() - 1);
             //alarmTime.setSeconds(alarmTime.getSeconds() - 10);
-            Log.e("CreateAlarmDialog","Rimossi 90 minuti: " + currentTime.toString());
-            Log.e("CreateAlarmDialog","Contatore diminuito a: " + timeIterations);
-            Log.e("CreateAlarmDialog","sleepHours a: " + sleepHours);
+            Log.d("CreateAlarmDialog",String.format("Rimossi %3f minuti: ",selectedInterval) + currentTime.toString());
+            Log.d("CreateAlarmDialog","Contatore diminuito a: " + timeIterations);
+            Log.d("CreateAlarmDialog","sleepHours a: " + sleepHours);
             time(currentTime);
             updateSuggestion();
         });
         root.findViewById(R.id.alarmTimePickerPlus).setOnClickListener(view13 -> {
             timeIterations++;
-            sleepHours += 1.5;
-            alarmTime.setMinutes(alarmTime.getMinutes() + 90);
+            sleepHours += sleepHoursModifier;
+            alarmTime.setMinutes(alarmTime.getMinutes() + (int) selectedInterval);
             //alarmTime.setMinutes(alarmTime.getMinutes() + 1);
             //alarmTime.setSeconds(alarmTime.getSeconds() + 10);
-            Log.e("CreateAlarmDialog","Aggiunti 90 minuti: " + currentTime.toString());
-            Log.e("CreateAlarmDialog","Contatore aumentato a: " + timeIterations);
-            Log.e("CreateAlarmDialog","sleepHours a: " + sleepHours);
+            Log.d("CreateAlarmDialog",String.format("Aggiunti %3f minuti: ",selectedInterval) + currentTime.toString());
+            Log.d("CreateAlarmDialog","Contatore aumentato a: " + timeIterations);
+            Log.d("CreateAlarmDialog","sleepHours a: " + sleepHours);
             time(currentTime);
             updateSuggestion();
         });
 
         root.findViewById(R.id.alarmConfirm).setOnClickListener(view13 -> {
-            int offset = timeIterations / 16;
+            String alarmTitle = String.valueOf(((EditText) root.findViewById(R.id.alarmTimePickerText)).getText());
+
+            int numberOfSteps = (int) (24 / sleepHoursModifier);
+            Log.d("Log in CreateAlarmDialog","numberOfSteps :" + numberOfSteps);
+            int offset = timeIterations / numberOfSteps;
+            Log.d("Log in CreateAlarmDialog","offset :" + offset);
+
             if (offset < 0) {
                 while (offset != 0) {
                     currentTime.setHours(currentTime.getHours() + 24);
@@ -99,7 +118,14 @@ public class CreateAlarmDialog extends DialogFragment {
                     offset--;
                 }
             }
-            listener.onTimeSelected(currentTime);
+
+            Log.d("CreateAlarmDialog","Current Time definitivo: " + currentTime.toString());
+
+            NewAlarm newAlarm = new NewAlarm((int) currentTime.getTime(), currentTime,false);
+            if (!alarmTitle.equals("")) {
+                newAlarm.setTitle(alarmTitle);
+            }
+            listener.onTimeSelected(newAlarm);
             dismiss();
         });
 

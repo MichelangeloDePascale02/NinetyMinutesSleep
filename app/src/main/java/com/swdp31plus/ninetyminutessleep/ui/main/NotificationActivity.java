@@ -58,22 +58,28 @@ public class NotificationActivity extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         }
 
-        // Recupera l'ID della sveglia dalla notifica
+        // Recupera l'ID della sveglia dall'intent
         int alarmID = getIntent().getIntExtra("alarmID", -1);
         Date alarmTime = (Date) getIntent().getSerializableExtra("alarmTime");
 
-        Log.e("Log in notificationactivity", "alarmID: " + alarmID);
+        Log.d("Log in notificationactivity", "alarmID: " + alarmID);
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
         binding.notificationAlarmText.setText(sdf.format(alarmTime.getTime()));
+
+        NewAlarm triggeredAlarm = (NewAlarm) getIntent().getSerializableExtra("alarmObject");
+
+        if (triggeredAlarm.getTitle() != null) {
+            binding.notificationTitleText.setText(triggeredAlarm.getTitle());
+        }
 
         ArrayList<NewAlarm> readFromFile = (ArrayList<NewAlarm>) StorageUtilities.loadAlarms("currentAlarm.obj", getApplicationContext());
         if (readFromFile != null) {
             for (NewAlarm alarm : readFromFile) {
                 Log.e("NotificationActivity","alarm# : " + alarm.toString());
             }
-            if (readFromFile.remove(getIntent().getSerializableExtra("alarmObject"))) {
+            if (readFromFile.remove(triggeredAlarm)) {
                 StorageUtilities.saveAlarm((Serializable) readFromFile,"currentAlarm.obj", getApplicationContext());
             }
         }
@@ -92,8 +98,6 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         SharedPreferences preferences = getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);
-        String selectedRingtoneName = preferences.getString("selectedRingtoneName",null);
-        String selectedRingtoneUri = preferences.getString("selectedRingtoneUri",null);
         String selectedMp3Uri = preferences.getString("selectedMp3Uri",null);
 
         /*if (!(selectedRingtoneUri == null) && !(selectedRingtoneName == null)) {

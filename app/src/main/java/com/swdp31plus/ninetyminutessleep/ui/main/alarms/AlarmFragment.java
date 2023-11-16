@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,34 +104,41 @@ public class AlarmFragment extends Fragment implements
             }
         }
 
+        refreshScreen();
+
         binding.alarmListLiterallyRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
-        binding.alarmListToDialogNewAlarmButton.setOnClickListener(v -> {
+        ((MainActivity) requireActivity()).getGlobalFAB().setOnClickListener(v -> {
             CreateAlarmDialog dataPickerForAlarmDialog = new CreateAlarmDialog();
-            dataPickerForAlarmDialog.setListener(this);
+            dataPickerForAlarmDialog.setListener(AlarmFragment.this);
             dataPickerForAlarmDialog.show(getParentFragmentManager(), "dataPickerForAlarmDialog");
         });
 
+        /*binding.alarmListToDialogNewAlarmButton.setOnClickListener(v -> {
+            CreateAlarmDialog dataPickerForAlarmDialog = new CreateAlarmDialog();
+            dataPickerForAlarmDialog.setListener(this);
+            dataPickerForAlarmDialog.show(getParentFragmentManager(), "dataPickerForAlarmDialog");
+        });*/
+
         alarmsAdapter.setOnItemClickListener(alarm -> {
             MaterialAlertDialogBuilder confirmDialogBuilder = new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Title")
-                    .setMessage("Do you really want to whatever?")
+                    .setTitle(getString(R.string.warning_title))
+                    .setMessage(getString(R.string.delete_alarm))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("YES", (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                         prepareAlarmToStartService(alarm, ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_DISMISS);
                         dialog.dismiss();
+                        refreshScreen();
                     })
-                    .setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
             confirmDialogBuilder.create().show();
         });
         binding.alarmListLiterallyRV.setAdapter(alarmsAdapter);
 
         binding.intervalSelectorButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), getString(R.string.coming_soon), Toast.LENGTH_LONG).show();
-            // Method is ready, but untested. Lacking modifications in CreateAlarmDialog
-            /*CycleSelectionDialog cycleSelectionDialog = new CycleSelectionDialog();
+            CycleSelectionDialog cycleSelectionDialog = new CycleSelectionDialog();
             cycleSelectionDialog.setListener(AlarmFragment.this);
-            cycleSelectionDialog.show(getParentFragmentManager(), "CycleSelectionDialog");*/
+            cycleSelectionDialog.show(getParentFragmentManager(), "CycleSelectionDialog");
         });
 
         binding.ringtoneSelectorButton.setOnClickListener(v -> {
@@ -200,12 +208,17 @@ public class AlarmFragment extends Fragment implements
     }
 
     @Override
+    public void onTimeSelected(NewAlarm newAlarm) {
+        prepareAlarmToStartService(newAlarm, ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_SCHEDULE);
+        refreshScreen();
+    }
+
+    @Override
     public void onCycleSelected(int minutes) {
         SharedPreferences preferences = getActivity().getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("selectedInterval", minutes);
         editor.apply();
-        Log.w("Log in AlarmFragment","Ciclo impostato di: " + minutes);
     }
 
     private void prepareAlarmToStartService(NewAlarm alarm, String action) {
@@ -218,7 +231,6 @@ public class AlarmFragment extends Fragment implements
             startActivityForResult(permissionIntent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
         }
         Log.d("Log in AlarmFragment", "La action è: " + action);
-        Log.d("Log in AlarmFragment", "L'allarme al suo interno ha: " + alarm.toString());
         if (action.equals(ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_SCHEDULE)) {
             alarmsAdapter.add(alarm);
         } else if (action.equals(ValuesUtilities.AlarmsStorageFlags.ALARM_ACTION_DISMISS)) {
@@ -244,5 +256,15 @@ public class AlarmFragment extends Fragment implements
             alarmsAdapter.notifyDataSetChanged();
         }
         super.onResume();
+    }
+
+    private void refreshScreen() {
+        if (alarmsAdapter.getAlarmsList().isEmpty()) {
+            binding.alarmListLiterallyRV.setVisibility(View.GONE);
+            binding.alarmListTextViewEmpty.setVisibility(View.VISIBLE);
+        } else {
+            binding.alarmListLiterallyRV.setVisibility(View.VISIBLE);
+            binding.alarmListTextViewEmpty.setVisibility(View.GONE);
+        }
     }
 }

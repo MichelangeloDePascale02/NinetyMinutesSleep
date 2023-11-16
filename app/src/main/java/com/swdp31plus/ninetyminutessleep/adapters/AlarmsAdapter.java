@@ -35,6 +35,10 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getAvailableLocales()[0]);
         String newAlarmTime = sdf.format(alarm.getTime());
         holder.layoutAlarmRibbonTimeTxt.setText(newAlarmTime);
+        if (alarm.getTitle() != null) {
+            holder.layoutAlarmRibbonTimeTitle.setVisibility(View.VISIBLE);
+            holder.layoutAlarmRibbonTimeTitle.setText(alarm.getTitle());
+        }
         holder.layoutAlarmRibbonCardview.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(alarm);
@@ -49,13 +53,14 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView layoutAlarmRibbonTimeTxt;
-
+        TextView layoutAlarmRibbonTimeTitle;
         CardView layoutAlarmRibbonCardview;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             layoutAlarmRibbonTimeTxt = itemView.findViewById(R.id.layout_alarm_ribbon_time_text);
             layoutAlarmRibbonCardview = itemView.findViewById(R.id.layout_alarm_ribbon_cardview);
+            layoutAlarmRibbonTimeTitle = itemView.findViewById(R.id.layout_alarm_ribbon_time_title);
         }
     }
 

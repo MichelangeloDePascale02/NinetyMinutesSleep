@@ -5,11 +5,11 @@
     <string name="daily_alarm">Daily Alarm</string>
 
     <string name="warning_title">Warning</string>
-    <string name="warning_text">This application is still in beta. Currently it is possible to play sounds (even simultaneously), to set a power-off timer for them and to schedule an alarm using the built in Android app. Sounds library will be expanded in the future, too!</string>
+    <string name="warning_text">This application is still in beta. Currently it is possible to play sounds (even simultaneously) and to set multiple Alarms inside the app, with the ability to choose a custom audio file as the ringtone. Sounds library will be expanded in the future, too!</string>
 
     <string name="explanation_90_title">Why 90 minutes?</string>
     <string name="explanation_90_text">When we fall asleep we enter non-rapid eye movement sleep (NREM). This is divided into three stages, with each becoming progressively deeper. NREM1 and NREM2 are light phases of sleep, from which we can be easily roused. NREM3 becomes deeper, and if woken up, we can feel disorientated. Following on from this is rapid eye movement sleep (REM), the stage at which we dream.
-        Each sleep cycle lasts around one and a half hours, and in order to feel fully rested and refreshed when we wake up, we must experience all four stages. A full night’s sleep will include five or six cycles, while a disturbed, restless night consists of fewer.</string>
+        Each sleep cycle lasts around one and a half hours, and in order to feel fully rested and refreshed when we wake up, we must experience all four stages. A full night’s sleep will include five or six cycles, while a disturbed, restless night consists of fewer. However, you can customize the cycle duration in this tab to better adapt it to your needs.</string>
 
     <string name="killswitch_title">Alarm killswitch</string>
     <string name="killswitch_text">Pressing Ok, every saved Alarm will be deleted (useful if you found a bug!)</string>
@@ -38,20 +38,6 @@
     <string name="error_no_browser">No suitable browsers are present to complete this action.</string>
     <string name="coming_soon">Coming soon!</string>
 
-    <string name="no_current_alarm">You don\'t have any scheduled Alarm</string>
-    <string name="current_alarm_set">An Alarm is schedule to trigger at %s</string>
-    <string name="scheduled_alarm">Scheduled Alarm</string>
-
-    <string name="long_sleeper">Your body and mind are thanking you for getting %1$.1f hours of sleep. Keep up the good work and continue to prioritize your rest.</string>
-    <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f hours. Keep up the good work, but remember that there\'s always room for improvement.</string>
-    <string name="short_sleeper">Invest in your health and well-being by giving your body the sleep it needs to function at its best. %1$.1f hours of sleep are not enough. Try to increase your sleep time to at least 6+ hours.</string>
-
-    <string name="hours_of_sleep">Hours of sleep:</string>
-    <string name="minutes"> minutes</string>
-
-    <string name="addCycle">+ 1 cycle</string>
-    <string name="removeCycle">- 1 cycle</string>
-
     <string name="rain">Rain</string>
     <string name="heavy_storm">Heavy Storm</string>
     <string name="waves_on_rocks">Waves on Rocks</string>
@@ -67,6 +53,26 @@
 
     <string name="new_alarm">Create new alarm</string>
     <string name="set_cycle_duration">Set cycle duration</string>
+    <string name="current_cycle_duration">A cycle is currently %2d minutes long.</string>
+
+    <string name="no_current_alarm">You don\'t have any scheduled Alarm</string>
+    <string name="current_alarm_set">An Alarm is schedule to trigger at %s</string>
+    <string name="scheduled_alarm">Scheduled Alarm</string>
+
+    <string name="long_sleeper">Your body and mind are thanking you for getting %1$.1f hours of sleep. Keep up the good work and continue to prioritize your rest.</string>
+    <string name="medium_sleeper">Congratulations on getting an optimal amount of sleep! You are sleeping for %1$.2f hours. Keep up the good work, but remember that there\'s always room for improvement.</string>
+    <string name="short_sleeper">Invest in your health and well-being by giving your body the sleep it needs to function at its best. %1$.1f hours of sleep are not enough. Try to increase your sleep time to at least 6+ hours.</string>
+
+    <string name="hours_of_sleep">Hours of sleep:</string>
+    <string name="minutes"> minutes</string>
+    <string name="alarm_title">Alarm title</string>
+    <string name="cycle_duration">Cycle duration</string>
+    <string name="ringtone_selector">Ringtone selector</string>
+
+    <string name="add_cycle">+ 1 cycle</string>
+    <string name="remove_cycle">- 1 cycle</string>
+
+    <string name="delete_alarm">Do you really want to delete this alarm?</string>
 
     <string name="notification_text">Alarm is ringing!</string>
     <string name="dismiss_to_quit">Dismiss the alarm to quit</string>
