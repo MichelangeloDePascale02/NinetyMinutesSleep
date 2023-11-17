@@ -68,6 +68,9 @@
     <string name="alarm_title">Alarm title</string>
     <string name="cycle_duration">Cycle duration</string>
     <string name="ringtone_selector">Ringtone selector</string>
+    <string name="ringtone_volume">Ringtone volume</string>
+    <string name="ringtone_selected_is">Ringtone selected: </string>
+    <string name="ringtone_selector_hint">Click to choose the alarm ringtone</string>
 
     <string name="add_cycle">+ 1 cycle</string>
     <string name="remove_cycle">- 1 cycle</string>

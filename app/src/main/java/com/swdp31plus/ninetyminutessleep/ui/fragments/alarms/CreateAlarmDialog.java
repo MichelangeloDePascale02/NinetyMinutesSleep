@@ -1,10 +1,15 @@
 package com.swdp31plus.ninetyminutessleep.ui.fragments.alarms;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +37,7 @@ public class CreateAlarmDialog extends DialogFragment {
     private TextView hoursTextView;
     private TextView minutesTextView;
     private TextView sleepHoursGoalTextView;
+    private Uri selectedMp3Uri;
 
     public interface CommunicationInterface {
         void onTimeSelected(Date alarmDate);
@@ -63,8 +69,8 @@ public class CreateAlarmDialog extends DialogFragment {
 
         currentTime = new Date();
         currentTime.setSeconds(0);
-        Log.e("CreateAlarmDialog","Data normalizzata: " + currentTime.toString());
-        Log.e("CreateAlarmDialog","Contatore a: " + timeIterations);
+        currentTime.setMinutes(currentTime.getMinutes() + 1);
+        Log.d("CreateAlarmDialog","Data normalizzata " + currentTime.toString() + " e contatore a " + timeIterations);
         alarmTime = currentTime;
         time(currentTime);
 
@@ -74,12 +80,24 @@ public class CreateAlarmDialog extends DialogFragment {
 
         Log.d("Log in CreateAlarmDialog", "selectedInterval è " + selectedInterval + " e quindi sleepHoursModifier è " + sleepHoursModifier);
 
+        root.findViewById(R.id.alarmTimePickerRingtonePicker).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("audio/*");
+            startActivityForResult(intent, 1);
+        });
+
+        root.findViewById(R.id.alarmTimePickerRingtonePicker).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(),getString(R.string.ringtone_selector_hint),Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
         root.findViewById(R.id.alarmTimePickerMinus).setOnClickListener(view12 -> {
             timeIterations--;
             sleepHours -= sleepHoursModifier;
             alarmTime.setMinutes(alarmTime.getMinutes() - (int) selectedInterval);
-            //alarmTime.setMinutes(alarmTime.getMinutes() - 1);
-            //alarmTime.setSeconds(alarmTime.getSeconds() - 10);
             Log.d("CreateAlarmDialog",String.format("Rimossi %3f minuti: ",selectedInterval) + currentTime.toString());
             Log.d("CreateAlarmDialog","Contatore diminuito a: " + timeIterations);
             Log.d("CreateAlarmDialog","sleepHours a: " + sleepHours);
@@ -90,8 +108,6 @@ public class CreateAlarmDialog extends DialogFragment {
             timeIterations++;
             sleepHours += sleepHoursModifier;
             alarmTime.setMinutes(alarmTime.getMinutes() + (int) selectedInterval);
-            //alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-            //alarmTime.setSeconds(alarmTime.getSeconds() + 10);
             Log.d("CreateAlarmDialog",String.format("Aggiunti %3f minuti: ",selectedInterval) + currentTime.toString());
             Log.d("CreateAlarmDialog","Contatore aumentato a: " + timeIterations);
             Log.d("CreateAlarmDialog","sleepHours a: " + sleepHours);
@@ -100,7 +116,9 @@ public class CreateAlarmDialog extends DialogFragment {
         });
 
         root.findViewById(R.id.alarmConfirm).setOnClickListener(view13 -> {
-            String alarmTitle = String.valueOf(((EditText) root.findViewById(R.id.alarmTimePickerText)).getText());
+            EditText titleEditText = root.findViewById(R.id.alarmTimePickerText);
+            String alarmTitle;
+            alarmTitle = String.valueOf(titleEditText.getText());
 
             int numberOfSteps = (int) (24 / sleepHoursModifier);
             Log.d("Log in CreateAlarmDialog","numberOfSteps :" + numberOfSteps);
@@ -125,6 +143,10 @@ public class CreateAlarmDialog extends DialogFragment {
             if (!alarmTitle.equals("")) {
                 newAlarm.setTitle(alarmTitle);
             }
+            if (selectedMp3Uri != null) {
+                newAlarm.setRingtoneUriString(selectedMp3Uri.toString());
+            }
+            Log.e("Log in CreateAlarmDialog", "Alarm: " + newAlarm.toString());
             listener.onTimeSelected(newAlarm);
             dismiss();
         });
@@ -170,6 +192,27 @@ public class CreateAlarmDialog extends DialogFragment {
         }
         builder.append(value);
         return builder.toString();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            selectedMp3Uri = data.getData();
+            if (selectedMp3Uri.getScheme().equals("content")) {
+                try (Cursor cursor = getContext().getContentResolver().query(selectedMp3Uri, null, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        String ringtoneName = cursor.getString(
+                                cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                        ringtoneName = ringtoneName.replace(".mp3","");
+                        Toast.makeText(getContext(), getString(R.string.ringtone_selected_is) + "\n" + ringtoneName, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        } else {
+            selectedMp3Uri = null;
+        }
     }
 
 }

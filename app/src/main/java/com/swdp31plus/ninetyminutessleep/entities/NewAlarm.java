@@ -19,6 +19,7 @@ public class NewAlarm implements Parcelable, Serializable {
     private String title;
     private boolean active;
     private Uri ringtoneUri;
+    private String ringtoneUriString;
 
     public NewAlarm(int id, Date time, boolean active) {
         this.id = id;
@@ -31,6 +32,7 @@ public class NewAlarm implements Parcelable, Serializable {
         time = new Date(in.readLong());
         active = in.readByte() != 0;
         title = in.readString();
+        ringtoneUriString = in.readString();
     }
 
     public static final Creator<NewAlarm> CREATOR = new Creator<NewAlarm>() {
@@ -61,12 +63,12 @@ public class NewAlarm implements Parcelable, Serializable {
         this.active = active;
     }
 
-    public Uri getRingtoneUri() {
-        return ringtoneUri;
+    public String getRingtoneUriString() {
+        return ringtoneUriString;
     }
 
-    public void setRingtoneUri(Uri ringtoneUri) {
-        this.ringtoneUri = ringtoneUri;
+    public void setRingtoneUriString(String ringtoneUriString) {
+        this.ringtoneUriString = ringtoneUriString;
     }
 
     public String getTitle() {
@@ -88,6 +90,7 @@ public class NewAlarm implements Parcelable, Serializable {
         dest.writeLong(time.getTime());
         dest.writeByte((byte) (active ? 1 : 0));
         dest.writeString(title);
+        dest.writeString(ringtoneUriString);
     }
 
     @Override
@@ -106,5 +109,15 @@ public class NewAlarm implements Parcelable, Serializable {
         int result = id;
         result = 31 * result + (time != null ? time.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "NewAlarm{" +
+                "id=" + id +
+                ", time=" + time +
+                ", title='" + title + '\'' +
+                ", ringtoneUriString='" + ringtoneUriString + '\'' +
+                '}';
     }
 }

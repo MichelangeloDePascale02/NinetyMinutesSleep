@@ -84,10 +84,10 @@ public class NotificationActivity extends AppCompatActivity {
             }
         }
 
-        playAlarmSound();
+        playAlarmSound(triggeredAlarm.getRingtoneUriString());
     }
 
-    private void playAlarmSound() {
+    private void playAlarmSound(String ringtoneUriString) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             PowerManager powerManager = (PowerManager) this.getSystemService(POWER_SERVICE);
@@ -103,9 +103,10 @@ public class NotificationActivity extends AppCompatActivity {
         /*if (!(selectedRingtoneUri == null) && !(selectedRingtoneName == null)) {
             alert = Uri.parse(selectedRingtoneUri);
         }*/
-        if (!(selectedMp3Uri == null)){
-            alert = Uri.parse(selectedMp3Uri);
-        } else {
+
+        try {
+            alert = Uri.parse(ringtoneUriString);
+        } catch (Exception e) {
             alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
             if(alert == null) {
                 alert = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
@@ -123,6 +124,7 @@ public class NotificationActivity extends AppCompatActivity {
             // Using AudioManager, this code should set the alarm volume using the system value
             AudioManager am = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             ringtone.setVolume(normalizeToFloat(am.getStreamVolume(AudioManager.STREAM_ALARM)));
+            //ringtone.setVolume(0.02f);
         }
         ringtone.play();
 

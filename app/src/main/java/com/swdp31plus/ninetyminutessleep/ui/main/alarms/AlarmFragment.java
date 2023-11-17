@@ -94,6 +94,8 @@ public class AlarmFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        alarmsAdapter.setContext(getContext());
+
         readFromFile = (ArrayList<NewAlarm>) StorageUtilities.loadAlarms("currentAlarm.obj", requireContext());
 
         if (readFromFile != null)
@@ -105,6 +107,12 @@ public class AlarmFragment extends Fragment implements
         }
 
         refreshScreen();
+
+        binding.ringtoneVolumeButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_SOUND_SETTINGS);
+            startActivity(intent);
+        });
 
         binding.alarmListLiterallyRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
@@ -237,6 +245,7 @@ public class AlarmFragment extends Fragment implements
             alarmsAdapter.remove(alarm);
         }
         alarmsAdapter.notifyDataSetChanged();
+        binding.alarmListLiterallyRV.setAdapter(alarmsAdapter);
         StorageUtilities.saveAlarms(alarmsAdapter.getAlarmsList(),"currentAlarm.obj", requireContext());
 
         requireActivity().startService(intent);

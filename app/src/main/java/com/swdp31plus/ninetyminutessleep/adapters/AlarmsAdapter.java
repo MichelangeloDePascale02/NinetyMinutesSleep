@@ -1,5 +1,10 @@
 package com.swdp31plus.ninetyminutessleep.adapters;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,7 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
 
     private ArrayList<NewAlarm> alarmsList;
     private OnItemClickListener onItemClickListener;
+    private Context context;
 
     @NonNull
     @Override
@@ -39,6 +45,20 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
             holder.layoutAlarmRibbonTimeTitle.setVisibility(View.VISIBLE);
             holder.layoutAlarmRibbonTimeTitle.setText(alarm.getTitle());
         }
+        if (context != null && alarm.getRingtoneUriString() != null) {
+            holder.layoutAlarmRibbonTimeRingtone.setVisibility(View.VISIBLE);
+            Uri uri = Uri.parse(alarm.getRingtoneUriString());
+            if (uri.getScheme().equals("content")) {
+                try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        String ringtoneName = cursor.getString(
+                                cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                        ringtoneName = ringtoneName.replace(".mp3", "");
+                        holder.layoutAlarmRibbonTimeRingtone.setText(ringtoneName);
+                    }
+                }
+            }
+        }
         holder.layoutAlarmRibbonCardview.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(alarm);
@@ -54,6 +74,7 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView layoutAlarmRibbonTimeTxt;
         TextView layoutAlarmRibbonTimeTitle;
+        TextView layoutAlarmRibbonTimeRingtone;
         CardView layoutAlarmRibbonCardview;
 
         public ViewHolder(@NonNull View itemView){
@@ -61,6 +82,7 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
             layoutAlarmRibbonTimeTxt = itemView.findViewById(R.id.layout_alarm_ribbon_time_text);
             layoutAlarmRibbonCardview = itemView.findViewById(R.id.layout_alarm_ribbon_cardview);
             layoutAlarmRibbonTimeTitle = itemView.findViewById(R.id.layout_alarm_ribbon_time_title);
+            layoutAlarmRibbonTimeRingtone = itemView.findViewById(R.id.layout_alarm_ribbon_time_ringtone);
         }
     }
 
@@ -92,4 +114,6 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
     public ArrayList<NewAlarm> getAlarmsList() {
         return this.alarmsList;
     }
+
+    public void setContext(Context context) {this.context = context;}
 }
