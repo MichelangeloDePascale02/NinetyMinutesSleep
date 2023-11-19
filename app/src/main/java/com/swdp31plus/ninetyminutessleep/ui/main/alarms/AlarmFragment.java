@@ -17,12 +17,17 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -46,6 +51,7 @@ import com.swdp31plus.ninetyminutessleep.utilities.ValuesUtilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class AlarmFragment extends Fragment implements
         CreateAlarmDialog.CommunicationInterface,
@@ -264,6 +270,7 @@ public class AlarmFragment extends Fragment implements
             }
             alarmsAdapter.notifyDataSetChanged();
         }
+
         super.onResume();
     }
 

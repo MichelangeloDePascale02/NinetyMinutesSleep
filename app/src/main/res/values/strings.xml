@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">NinetyMinutesSleep</string>
+    <string name="app_version_name">Emma</string>
     <string name="github_link">https://github.com/MichelangeloDePascale02</string>
+    <string name="github_link_releases">https://api.github.com/repos/MichelangeloDePascale02/NinetyMinutesSleep/releases</string>
+
+    <string name="update_app">Outdated version, visit my GitHub to update.</string>
+    <string name="latest_app">You\'re running the latest version!</string>
+    <string name="error_update_app">Failed to retrieve latest version, please try again later.</string>
+
     <string name="sounds">Sounds</string>
     <string name="daily_alarm">Daily Alarm</string>
+    <string name="pomodoro_timer">Pomodoro Timer</string>
 
     <string name="warning_title">Warning</string>
-    <string name="warning_text">This application is still in beta. Currently it is possible to play sounds (even simultaneously) and to set multiple Alarms inside the app, with the ability to choose a custom audio file as the ringtone. Sounds library will be expanded in the future, too!</string>
+    <string name="warning_text">The application is still in beta. In addition to the soundboard, with a swipe to the right you can access the Alarms section. They are customizable in title, time and ringtone. \nAdditionally, you can choose a rule other than the 90 minute rule. \nFor further info, advices and functions, open the menu at the top right.</string>
 
     <string name="explanation_90_title">Why 90 minutes?</string>
     <string name="explanation_90_text">When we fall asleep we enter non-rapid eye movement sleep (NREM). This is divided into three stages, with each becoming progressively deeper. NREM1 and NREM2 are light phases of sleep, from which we can be easily roused. NREM3 becomes deeper, and if woken up, we can feel disorientated. Following on from this is rapid eye movement sleep (REM), the stage at which we dream.
@@ -26,6 +34,7 @@
     <string name="ok">OK</string>
     <string name="understood">Ok, I understood.</string>
     <string name="github">Visit my GitHub</string>
+    <string name="updates">Check for updates</string>
     <string name="do_not_show_this_again">Do not show this again</string>
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>

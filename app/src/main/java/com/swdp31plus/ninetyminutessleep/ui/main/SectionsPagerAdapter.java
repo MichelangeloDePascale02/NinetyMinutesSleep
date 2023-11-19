@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.ui.main.alarms.AlarmFragment;
+import com.swdp31plus.ninetyminutessleep.ui.main.pomodoro.PomodoroFragment;
 import com.swdp31plus.ninetyminutessleep.ui.main.sounds.SoundFragment;
 
 /**
@@ -20,11 +21,11 @@ import com.swdp31plus.ninetyminutessleep.ui.main.sounds.SoundFragment;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private SoundFragment firstFragment;
-
     private AlarmFragment newAlarmFragment;
+    private PomodoroFragment newPomodoroFragment;
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm};
+    private static final int[] TAB_TITLES = new int[]{R.string.sounds, R.string.daily_alarm, R.string.pomodoro_timer};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -42,6 +43,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         } else if (position == 1) {
             newAlarmFragment = AlarmFragment.newInstance(position + 1);
             return newAlarmFragment;
+        } if (position == 2) {
+            newPomodoroFragment = PomodoroFragment.newInstance(position + 1);
+            return newPomodoroFragment;
         } else {
             return PlaceholderFragment.newInstance(position + 1);
         }

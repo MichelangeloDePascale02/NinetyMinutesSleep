@@ -3,6 +3,7 @@ package com.swdp31plus.ninetyminutessleep.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -18,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import com.swdp31plus.ninetyminutessleep.BuildConfig;
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.databinding.ActivityMainBinding;
+import com.swdp31plus.ninetyminutessleep.utilities.NetworkUtilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = binding.viewPager;
-        viewPager.setAdapter(sectionsPagerAdapter);
+        binding.viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
-        tabs.setupWithViewPager(viewPager);
+        tabs.setupWithViewPager(binding.viewPager);
 
         if (!Settings.canDrawOverlays(this)) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
@@ -117,11 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 if(BuildConfig.DEBUG) {
                     aboutText = new StringBuilder()
                             .append(aboutText)
+                            .append(" " + getString(R.string.app_version_name))
                             .append(" - DEBUG")
                             .toString();
                 } else {
                     aboutText = new StringBuilder()
                             .append(aboutText)
+                            .append(" " + getString(R.string.app_version_name))
                             .append(" - RELEASE")
                             .toString();
                 }
@@ -135,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
 
                 dialogView.findViewById(R.id.button_dialog_about_dismiss).setOnClickListener(v -> {
                     dialog.dismiss();
+                });
+
+                dialogView.findViewById(R.id.button_dialog_about_check_version).setOnClickListener(v -> {
+                    NetworkUtilities.GitHubReleaseTask gitHubReleaseTask = new NetworkUtilities.GitHubReleaseTask();
+                    gitHubReleaseTask.setContext(getApplicationContext());
+                    gitHubReleaseTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 });
 
                 dialogView.findViewById(R.id.button_dialog_about_github).setOnClickListener(v -> {
@@ -234,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.topAppBar.setNavigationOnClickListener(view -> {});
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -254,34 +264,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-        /*MenuItem register = menu.findItem(R.id.sleep_timer_for_sounds);
-        if(getSupportFragmentManager().findFragmentByTag().getClass().getSimpleName();)
-        {
-            register.setVisible(false);
-        }
-        else
-        {
-            register.setVisible(true);
-        }
-        return true;*/
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 123) {
             if (!Settings.canDrawOverlays(this)) {
                 MainActivity.this.finish();
             } else {
-                Log.e("mainactivity", "permission granted");
+                Log.e("Log in MainActivity", "Full Permission Granted, app will work.");
             }
         }
     }
@@ -315,4 +304,5 @@ public class MainActivity extends AppCompatActivity {
     public FloatingActionButton getGlobalFAB() {
         return binding.floatingActionButtonGlobal;
     }
+
 }

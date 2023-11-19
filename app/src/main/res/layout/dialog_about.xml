@@ -14,17 +14,35 @@
         android:textSize="16sp"
         />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <Button
+        android:id="@+id/button_dialog_about_check_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="14sp"
+        android:layout_weight="1"
+        android:textColor="?attr/colorPrimary"
+        style="?android:attr/buttonBarButtonStyle"
+        android:text="@string/updates" />
     <Button
         android:id="@+id/button_dialog_about_github"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="17sp"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp"
+        android:layout_weight="1"
         android:textColor="?attr/colorPrimary"
         style="?android:attr/buttonBarButtonStyle"
         android:text="@string/github" />
+</LinearLayout>
 
     <Button
         android:id="@+id/button_dialog_about_dismiss"
@@ -32,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
-        android:textSize="17sp"
+        android:textSize="16sp"
         android:textColor="?attr/colorPrimary"
         style="?android:attr/buttonBarButtonStyle"
         android:text="@string/ok" />

@@ -53,7 +53,9 @@ public class AlarmsAdapter extends RecyclerView.Adapter<AlarmsAdapter.ViewHolder
                     if (cursor != null && cursor.moveToFirst()) {
                         String ringtoneName = cursor.getString(
                                 cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                        // TODO: better use a regex
                         ringtoneName = ringtoneName.replace(".mp3", "");
+                        ringtoneName = ringtoneName.replace(".m4a", "");
                         holder.layoutAlarmRibbonTimeRingtone.setText(ringtoneName);
                     }
                 }
