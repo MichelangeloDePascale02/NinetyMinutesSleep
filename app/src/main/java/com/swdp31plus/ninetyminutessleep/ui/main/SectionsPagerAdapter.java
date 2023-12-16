@@ -60,7 +60,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 2;
+        return 3;
     }
 
     public SoundFragment getFirstFragment() {

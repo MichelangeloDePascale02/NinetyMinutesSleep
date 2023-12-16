@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,15 +46,8 @@ public class SoundFragment extends Fragment {
         setHasOptionsMenu(true);
 
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
-
-        sounds = new ArrayList<>();
-        soundsPlayers = new ArrayList<>();
-        soundsAdapter = new SoundsAdapter();
+        assert getArguments() != null;
+        pageViewModel.setIndex(getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -76,6 +70,10 @@ public class SoundFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sounds = new ArrayList<>();
+        soundsPlayers = new ArrayList<>();
+        soundsAdapter = new SoundsAdapter();
 
         // warning dialog building
         SharedPreferences preferences = getActivity().getSharedPreferences("NinetyMinutesSleepPreferences", MODE_PRIVATE);

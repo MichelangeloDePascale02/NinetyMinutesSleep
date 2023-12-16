@@ -78,12 +78,8 @@ public class AlarmFragment extends Fragment implements
         setHasOptionsMenu(true);
 
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
-        int index = 1;
-        if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-        pageViewModel.setIndex(index);
-        alarmsAdapter = new AlarmsAdapter();
+        assert getArguments() != null;
+        pageViewModel.setIndex(getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -99,6 +95,7 @@ public class AlarmFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        alarmsAdapter = new AlarmsAdapter();
 
         alarmsAdapter.setContext(getContext());
 

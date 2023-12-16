@@ -130,7 +130,11 @@ public class NotificationActivity extends AppCompatActivity {
 
         final long[] PATTERN = {0, 1000};
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(VibrationEffect.createWaveform(PATTERN, 0));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createWaveform(PATTERN, 0));
+        } else {
+            vibrator.vibrate(PATTERN, 0);
+        }
 
         binding.notificationSwipebutton.setOnStateChangeListener(active -> {
             ringtone.stop();

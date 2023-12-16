@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.viewPager.setOffscreenPageLimit(3);
+
         sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         binding.viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;

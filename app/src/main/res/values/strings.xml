@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">NinetyMinutesSleep</string>
-    <string name="app_version_name">Emma</string>
+    <string name="app_version_name">Finn</string>
     <string name="github_link">https://github.com/MichelangeloDePascale02</string>
     <string name="github_link_releases">https://api.github.com/repos/MichelangeloDePascale02/NinetyMinutesSleep/releases</string>
 
@@ -59,6 +59,9 @@
     <string name="fan">Noisy Fan</string>
 
     <string name="stop_sounds_timer">Sounds will be stopped in %3d minutes.</string>
+
+    <string name="start_pomodoro">Start Pomodoro</string>
+    <string name="reset_pomodoro">Reset Pomodoro</string>
 
     <string name="new_alarm">Create new alarm</string>
     <string name="set_cycle_duration">Set cycle duration</string>
