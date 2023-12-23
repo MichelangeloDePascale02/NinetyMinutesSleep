@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -68,6 +69,11 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
         pageViewModel.setIndex(getArguments().getInt(ARG_SECTION_NUMBER));
 
         Intent serviceIntent = new Intent(getActivity(), PomodoroService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireActivity().startForegroundService(serviceIntent);
+        } else {
+            requireActivity().startService(serviceIntent);
+        }
         requireActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -76,8 +82,12 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
         super.onDestroy();
 
         if (isServiceBound) {
-            getActivity().unbindService(serviceConnection);
+            requireActivity().unbindService(serviceConnection);
             isServiceBound = false;
+        }
+
+        if (pomodoroService != null && pomodoroService.getRemainingTime() > 0) {
+            requireActivity().startService(new Intent(getActivity(), PomodoroService.class));
         }
     }
 
@@ -123,8 +133,8 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
     public void onTimerUpdate(long remainingTime) {
         try {
             binding.semiCircleView.setMillis(remainingTime);
-            int remainingTimeMinutes = (int) remainingTime / 60000; // TODO: improve accuracy
-            binding.semiCircleView.setProgress((remainingTimeMinutes * 100) / (int) ValuesUtilities.PomodoroFlags.TOTAL_TIME);
+            int progress = (int) (((remainingTime * 100) / (int) ValuesUtilities.PomodoroFlags.TOTAL_TIME) / 60000);
+            binding.semiCircleView.setProgress(progress);
         } catch (Exception e) {
             Log.e("PomodoroFragment","Something broke!");
         }

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -76,7 +77,6 @@ public class PomodoroService extends Service {
         super.onCreate();
         notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannel();
-        startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification());
         Log.d("Pomodoro Service", "onCreate activated!");
     }
 
@@ -101,6 +101,7 @@ public class PomodoroService extends Service {
             }
         };
 
+        startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification());
         timer.start();
     }
 
@@ -129,7 +130,7 @@ public class PomodoroService extends Service {
 
     private Notification createOngoingNotification() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE
         );
@@ -141,7 +142,8 @@ public class PomodoroService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Timer")
                 .setContentText("Time left: " + mmss)
-                .setSmallIcon(R.drawable.alarm_off_24)
+                .setSmallIcon(R.drawable.baseline_alarm_24)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .build();
@@ -149,6 +151,7 @@ public class PomodoroService extends Service {
 
     private Notification createFinishedNotification() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE
         );
@@ -156,7 +159,8 @@ public class PomodoroService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Timer")
                 .setContentText("Time's up!")
-                .setSmallIcon(R.drawable.alarm_off_24)
+                .setSmallIcon(R.drawable.baseline_alarm_24)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();

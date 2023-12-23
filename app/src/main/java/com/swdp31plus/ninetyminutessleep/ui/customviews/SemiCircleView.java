@@ -86,12 +86,12 @@ public class SemiCircleView extends View {
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
         paint.setStyle(Paint.Style.FILL);
-        paint.setTextSize(110);  // Regola la dimensione del testo come desiderato
+        paint.setTextSize(150);  // Regola la dimensione del testo come desiderato
         paint.setTextAlign(Paint.Align.CENTER);
 
         // Calcola le coordinate per il centro della vista
         int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2 + 180;
+        int centerY = getHeight() / 2 + 260;
 
         // Disegna il testo al centro
         canvas.drawText(ms, centerX, centerY, paint);
