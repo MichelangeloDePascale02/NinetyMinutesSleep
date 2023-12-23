@@ -51,6 +51,12 @@
             android:stopWithTask="false"
             android:exported="false" />
 
+        <service
+            android:name=".services.PomodoroService"
+            android:enabled="true"
+            android:stopWithTask="false"
+            android:exported="false" />
+
         <receiver
             android:name=".services.AlarmReceiver"
             android:enabled="true"

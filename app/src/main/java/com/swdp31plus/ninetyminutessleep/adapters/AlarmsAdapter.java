@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.entities.Alarm;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 
 import java.text.SimpleDateFormat;

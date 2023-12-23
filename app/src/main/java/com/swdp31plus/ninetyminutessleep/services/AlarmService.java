@@ -28,28 +28,11 @@ public class AlarmService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        //createNotificationChannel();
-
-        /*NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "String")
-                .setContentTitle("Title")
-                .setContentText("Content")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);*/
-
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Qui puoi gestire l'attivazione delle sveglie e programmare gli allarmi
-        // Recupera la lista delle sveglie dal modello di dati
-        /*List<NewAlarm> sveglie = getListaSveglie();
-
-        for (NewAlarm sveglia : sveglie) {
-            if (sveglia.isActive()) {
-                programmareAllarme(sveglia);
-            }
-        }*/
         NewAlarm newAlarm = null;
 
         try {
@@ -125,18 +108,5 @@ public class AlarmService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-/*
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        CharSequence name = "NinetyMinutesSleep Alarm Channel";
-        String description = "This is a description";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("AlarmChannel", name, importance);
-        channel.setDescription(description);
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
-    }*/
+
 }
