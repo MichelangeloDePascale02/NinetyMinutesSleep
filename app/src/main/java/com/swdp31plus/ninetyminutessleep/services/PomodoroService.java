@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.ui.main.MainActivity;
@@ -32,7 +34,6 @@ public class PomodoroService extends Service {
 
     private final IBinder binder = new LocalBinder();
 
-    private final String CHANNEL_ID = "TimerChannel";
     private final int ONGOING_NOTIFICATION_ID = 1;
     private final int FINISHED_NOTIFICATION_ID = 2;
 
@@ -77,7 +78,7 @@ public class PomodoroService extends Service {
         super.onCreate();
         notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannel();
-        Log.d("Pomodoro Service", "onCreate activated!");
+        //Log.d("Pomodoro Service", "onCreate activated!");
     }
 
     public void startTimer(long duration) {
@@ -119,8 +120,8 @@ public class PomodoroService extends Service {
     private void createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Timer Channel",
+                    ValuesUtilities.PomodoroFlags.CHANNEL_NAME, // that's the ID
+                    ValuesUtilities.PomodoroFlags.CHANNEL_NAME, // i'm lazy, it's also the name
                     NotificationManager.IMPORTANCE_LOW
             );
 
@@ -135,17 +136,17 @@ public class PomodoroService extends Service {
                 this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE
         );
 
-        @SuppressLint("DefaultLocale") String mmss = String.format("%02d:%02d",
+        @SuppressLint("DefaultLocale") String ms = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(remainingTime) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(remainingTime) % TimeUnit.MINUTES.toSeconds(1));
 
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Timer")
-                .setContentText("Time left: " + mmss)
-                .setSmallIcon(R.drawable.baseline_alarm_24)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)
-                .setContentIntent(pendingIntent)
+        return new NotificationCompat.Builder(this, ValuesUtilities.PomodoroFlags.CHANNEL_NAME)
+                .setContentTitle(getString(R.string.pomodoro_notification_title))
+                .setContentText(getString(R.string.pomodoro_notification_content_ongoing) + " " + ms)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)                .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setContentIntent(pendingIntent)
                 .build();
     }
 
@@ -156,11 +157,12 @@ public class PomodoroService extends Service {
                 this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE
         );
 
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Timer")
-                .setContentText("Time's up!")
-                .setSmallIcon(R.drawable.baseline_alarm_24)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)
+        return new NotificationCompat.Builder(this, ValuesUtilities.PomodoroFlags.CHANNEL_NAME)
+                .setContentTitle(getString(R.string.pomodoro_notification_title))
+                .setContentText(getString(R.string.pomodoro_notification_content_finished))
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) // Imposta un'icona più grande (Bitmap)                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();
@@ -180,6 +182,11 @@ public class PomodoroService extends Service {
 
     private void deleteOngoingNotification() {
         notificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        Log.d("Pomodoro Service", "notification canceled!");
+    }
+
+    private void deleteFinishedNotification() {
+        notificationManager.cancel(FINISHED_NOTIFICATION_ID);
         Log.d("Pomodoro Service", "notification canceled!");
     }
 

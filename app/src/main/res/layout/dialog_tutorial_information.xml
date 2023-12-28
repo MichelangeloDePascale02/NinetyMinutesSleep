@@ -30,7 +30,7 @@
         android:layout_margin="10dp"
         android:textSize="17sp"
         android:textColor="?attr/colorPrimary"
-        style="?android:attr/buttonBarButtonStyle"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:text="@string/understood" />
 
 </LinearLayout>

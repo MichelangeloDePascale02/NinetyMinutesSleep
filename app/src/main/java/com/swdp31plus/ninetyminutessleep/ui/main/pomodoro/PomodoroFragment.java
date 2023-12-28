@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.databinding.FragmentPomodoroBinding;
 import com.swdp31plus.ninetyminutessleep.services.PomodoroService;
 import com.swdp31plus.ninetyminutessleep.ui.main.PageViewModel;
@@ -67,14 +69,6 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
         pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         assert getArguments() != null;
         pageViewModel.setIndex(getArguments().getInt(ARG_SECTION_NUMBER));
-
-        Intent serviceIntent = new Intent(getActivity(), PomodoroService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireActivity().startForegroundService(serviceIntent);
-        } else {
-            requireActivity().startService(serviceIntent);
-        }
-        requireActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -107,6 +101,14 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
         super.onViewCreated(view, savedInstanceState);
 
         binding.startPomodoroButton.setOnClickListener(v -> {
+            Intent serviceIntent = new Intent(getActivity(), PomodoroService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requireActivity().startForegroundService(serviceIntent);
+            } else {
+                requireActivity().startService(serviceIntent);
+            }
+            requireActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
             if (isServiceBound) {
                 pomodoroService.startTimer((ValuesUtilities.PomodoroFlags.TOTAL_TIME) * 1000L * 60);
             }
@@ -122,6 +124,8 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
     @Override
     public void onResume() {
         super.onResume();
+        Intent serviceIntent = new Intent(getActivity(), PomodoroService.class);
+        requireActivity().bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -136,7 +140,8 @@ public class PomodoroFragment extends Fragment implements PomodoroService.TimerU
             int progress = (int) (((remainingTime * 100) / (int) ValuesUtilities.PomodoroFlags.TOTAL_TIME) / 60000);
             binding.semiCircleView.setProgress(progress);
         } catch (Exception e) {
-            Log.e("PomodoroFragment","Something broke!");
+            Log.e("PomodoroFragment","Something regarding the timer broke.");
+            Toast.makeText(getContext(),getString(R.string.something_broke), Toast.LENGTH_LONG).show();
         }
     }
 }

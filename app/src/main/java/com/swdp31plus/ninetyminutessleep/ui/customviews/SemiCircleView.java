@@ -1,29 +1,30 @@
 package com.swdp31plus.ninetyminutessleep.ui.customviews;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
 import java.util.concurrent.TimeUnit;
 
-import com.swdp31plus.ninetyminutessleep.R;
-import com.swdp31plus.ninetyminutessleep.utilities.ValuesUtilities;
-
 public class SemiCircleView extends View {
 
-    private Paint paint;
-    private RectF outerRect;
+    private Paint foregroundPaint;
+    private RectF foregroundRect;
+    private Paint backgroundPaint;
+    private RectF backgroundRect;
     private int progress;  // Valore della ProgressBar
     private long millis;
-    private float strokeWidth = 60;  // Spessore del semicerchio
+    private float strokeWidth = 40;  // Spessore del semicerchio
     private SharedPreferences preferences;
 
     public SemiCircleView(Context context) {
@@ -42,18 +43,37 @@ public class SemiCircleView extends View {
     }
 
     private void init() {
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
+        foregroundPaint = new Paint();
+        foregroundPaint.setAntiAlias(true);
+        foregroundPaint.setStyle(Paint.Style.STROKE);
+        foregroundPaint.setStrokeWidth(strokeWidth);
+
+        backgroundPaint = new Paint();
+        backgroundPaint.setAntiAlias(true);
+        backgroundPaint.setStyle(Paint.Style.STROKE);
+        backgroundPaint.setStrokeWidth(strokeWidth);
+
         TypedValue typedValue = new TypedValue();
+        TypedArray arr;
         Resources.Theme theme = getContext().getTheme();
         theme.resolveAttribute(android.R.attr.colorPrimary,typedValue,false);
-        TypedArray arr = getContext().obtainStyledAttributes(typedValue.data, new int[]{
+        arr = getContext().obtainStyledAttributes(typedValue.data, new int[]{
                 android.R.attr.colorPrimary});
         int primaryColor = arr.getColor(0,-1);
-        paint.setColor(primaryColor);  // Colore del semicerchio
-        outerRect = new RectF();
+        arr.recycle();
+
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            backgroundPaint.setColor(Color.DKGRAY);
+        } else {
+            backgroundPaint.setColor(Color.LTGRAY);
+        }
+
+        foregroundPaint.setColor(primaryColor);
+
+        foregroundRect = new RectF();
+        backgroundRect = new RectF();
     }
 
     public void setProgress(int progress) {
@@ -74,27 +94,30 @@ public class SemiCircleView extends View {
         int margin = 100;
 
         // Imposta i rettangoli del semicerchio
-        outerRect.set(margin, margin, width - margin, height * 2 - margin);
-        paint.setStyle(Paint.Style.STROKE);
+        backgroundRect.set(margin, margin, width - margin, height * 2 - margin);
+        backgroundPaint.setStyle(Paint.Style.STROKE);
+        foregroundRect.set(margin, margin, width - margin, height * 2 - margin);
+        foregroundPaint.setStyle(Paint.Style.STROKE);
 
         // Disegna il semicerchio cavo
         float startAngle = 180;
         float sweepAngle = (float) progress / 100 * 180;  // Scala il progresso a un angolo
-        canvas.drawArc(outerRect, startAngle, sweepAngle, false, paint);
+        canvas.drawArc(backgroundRect, startAngle, 180, false, backgroundPaint);
+        canvas.drawArc(foregroundRect, startAngle, sweepAngle, false, foregroundPaint);
 
-        String ms = String.format("%02d:%02d",
+        @SuppressLint("DefaultLocale") String ms = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-        paint.setStyle(Paint.Style.FILL);
-        paint.setTextSize(150);  // Regola la dimensione del testo come desiderato
-        paint.setTextAlign(Paint.Align.CENTER);
+        foregroundPaint.setStyle(Paint.Style.FILL);
+        foregroundPaint.setTextSize(150);  // Regola la dimensione del testo come desiderato
+        foregroundPaint.setTextAlign(Paint.Align.CENTER);
 
         // Calcola le coordinate per il centro della vista
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2 + 260;
 
         // Disegna il testo al centro
-        canvas.drawText(ms, centerX, centerY, paint);
+        canvas.drawText(ms, centerX, centerY, foregroundPaint);
     }
 }
 

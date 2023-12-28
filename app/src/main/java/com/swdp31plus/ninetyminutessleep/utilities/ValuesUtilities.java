@@ -8,7 +8,7 @@ public class ValuesUtilities {
     }
 
     public static class PomodoroFlags {
-        public static String REMAINING_TIME = "remaining_time";
+        public static String CHANNEL_NAME = "Pomodoro Timer Channel";
         public static long TOTAL_TIME = 2;
     }
 }

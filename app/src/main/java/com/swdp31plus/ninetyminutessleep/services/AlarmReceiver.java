@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.ui.main.NotificationActivity;
 import com.swdp31plus.ninetyminutessleep.entities.NewAlarm;
 
@@ -15,9 +17,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NewAlarm alarm = intent.getParcelableExtra("alarm");
 
-        Log.e("Log in alarmreceiver", "alarmID: " + alarm.getId());
+        if (alarm != null) {
+            Log.e("Log in alarmreceiver", "alarmID: " + alarm.getId());
+        }
 
-        if (alarm.getId() != -1) {
+        if (alarm != null && alarm.getId() != -1) {
 
             Log.e("new alarm", alarm.toString());
 
@@ -48,6 +52,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
             }
             notificationManager.notify(alarmID, builder.build());*/
+        } else {
+            Toast.makeText(context, context.getString(R.string.something_broke), Toast.LENGTH_LONG).show();
         }
     }
 }

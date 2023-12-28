@@ -19,20 +19,17 @@
     <string name="explanation_90_text">When we fall asleep we enter non-rapid eye movement sleep (NREM). This is divided into three stages, with each becoming progressively deeper. NREM1 and NREM2 are light phases of sleep, from which we can be easily roused. NREM3 becomes deeper, and if woken up, we can feel disorientated. Following on from this is rapid eye movement sleep (REM), the stage at which we dream.
         Each sleep cycle lasts around one and a half hours, and in order to feel fully rested and refreshed when we wake up, we must experience all four stages. A full night’s sleep will include five or six cycles, while a disturbed, restless night consists of fewer. However, you can customize the cycle duration in this tab to better adapt it to your needs.</string>
 
-    <string name="killswitch_title">Alarm killswitch</string>
-    <string name="killswitch_text">Pressing Ok, every saved Alarm will be deleted (useful if you found a bug!)</string>
-
     <string name="permissions_title">Permissions needed</string>
-    <string name="permissions_text">Some permissions are required for the app to work. If you don\'t grant these permissions, the app will close itself.</string>
+    <string name="permissions_text">Some permissions are required for the app to work. If you don\'t grant these permissions, the app will close itself. Furthermore, we recommend deactivating any type of energy optimization for this application, to allow timers and alarms to work properly.</string>
 
     <string name="about_title">About</string>
-    <string name="about_text">Hi! I\'m a 21 years old student from Italy. This application was created as a short one-week project. In the future I hope I can improve it and add more features. If you would like to contribute, please visit my GitHub page for more informations. Or if you just want to follow me, use the links in my GitHub profile to find me on other social networks!</string>
+    <string name="about_text">Hi! I\'m a 21 years old student from Italy. This application was created as a short one-week project. In the future I hope I can improve it and add more features. If you would like to contribute, please visit my GitHub page for more information. Or if you just want to follow me, use the links in my GitHub profile to find me on other social networks!</string>
 
     <string name="timeout_title">Set timeout time</string>
     <string name="ringtone_title">Set ringtone</string>
 
     <string name="ok">OK</string>
-    <string name="understood">Ok, I understood.</string>
+    <string name="understood">OK, I understood.</string>
     <string name="github">Visit my GitHub</string>
     <string name="updates">Check for updates</string>
     <string name="do_not_show_this_again">Do not show this again</string>
@@ -62,11 +59,13 @@
 
     <string name="start_pomodoro">Start Pomodoro</string>
     <string name="reset_pomodoro">Reset Pomodoro</string>
+    <string name="pomodoro_notification_title">Pomodoro (NinetyMinutesSleep)</string>
+    <string name="pomodoro_notification_content_ongoing">Time left:</string>
+    <string name="pomodoro_notification_content_finished">Time\'s up!</string>
 
     <string name="new_alarm">Create new alarm</string>
     <string name="set_cycle_duration">Set cycle duration</string>
     <string name="current_cycle_duration">A cycle is currently %2d minutes long.</string>
-
     <string name="no_current_alarm">You don\'t have any scheduled Alarm</string>
     <string name="current_alarm_set">An Alarm is schedule to trigger at %s</string>
     <string name="scheduled_alarm">Scheduled Alarm</string>
@@ -93,4 +92,5 @@
     <string name="dismiss_to_quit">Dismiss the alarm to quit</string>
 
     <string name="bug_found_mail">Found a bug</string>
+    <string name="something_broke">Something broke!</string>
 </resources>

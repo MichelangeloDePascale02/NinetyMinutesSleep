@@ -23,24 +23,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:textSize="14sp"
         android:layout_weight="1"
         android:textColor="?attr/colorPrimary"
-        style="?android:attr/buttonBarButtonStyle"
+        style="@style/Widget.Material3.Button.TextButton"
         android:text="@string/updates" />
     <Button
         android:id="@+id/button_dialog_about_github"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:textSize="14sp"
         android:layout_weight="1"
         android:textColor="?attr/colorPrimary"
-        style="?android:attr/buttonBarButtonStyle"
+        style="@style/Widget.Material3.Button.TextButton"
         android:text="@string/github" />
 </LinearLayout>
 
@@ -48,11 +50,11 @@
         android:id="@+id/button_dialog_about_dismiss"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="16sp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:textSize="17sp"
         android:textColor="?attr/colorPrimary"
-        style="?android:attr/buttonBarButtonStyle"
         android:text="@string/ok" />
 
 </LinearLayout>
