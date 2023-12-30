@@ -63,6 +63,7 @@
         android:layout_marginHorizontal="20dp"
         android:gravity="center"
         android:drawablePadding="5dp"
+        android:layout_marginTop="30dp"
         android:text="@string/no_current_alarm"
         app:drawableTopCompat="@drawable/alarm_off_24" />
 

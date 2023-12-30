@@ -50,6 +50,8 @@
         android:clickable="true"
         android:layout_gravity="end|bottom"
         android:src="@drawable/baseline_add_24"
+        app:backgroundTint="?attr/colorPrimary"
+        app:tint="?attr/colorOnPrimary"
         app:layout_anchorGravity="bottom|right|end"
         />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

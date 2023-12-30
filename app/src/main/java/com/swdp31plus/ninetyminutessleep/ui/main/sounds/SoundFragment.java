@@ -157,6 +157,7 @@ public class SoundFragment extends Fragment {
         sounds.add(new Sound(getString(R.string.crackling_fire), R.raw.crackling_fire));
         sounds.add(new Sound(getString(R.string.hz528), R.raw.hz_528));
         sounds.add(new Sound(getString(R.string.fan), R.raw.fan));
+        sounds.add(new Sound(getString(R.string.tibet), R.raw.tibet));
 
         /*sounds.add(new Sound("TEST", R.raw.crackling_fire));
         sounds.add(new Sound("TEST", R.raw.light_breeze));

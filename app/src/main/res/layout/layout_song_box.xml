@@ -12,7 +12,7 @@
             android:id="@+id/layout_song_box_cardview"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:backgroundTint="?attr/colorPrimaryContainer"
+            android:backgroundTint="?attr/colorSecondaryContainer"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"

@@ -14,6 +14,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.swdp31plus.ninetyminutessleep.R;
+
 import java.util.concurrent.TimeUnit;
 
 public class SemiCircleView extends View {
@@ -56,7 +58,7 @@ public class SemiCircleView extends View {
         TypedValue typedValue = new TypedValue();
         TypedArray arr;
         Resources.Theme theme = getContext().getTheme();
-        theme.resolveAttribute(android.R.attr.colorPrimary,typedValue,false);
+        theme.resolveAttribute(android.R.attr.colorPrimary, typedValue,false);
         arr = getContext().obtainStyledAttributes(typedValue.data, new int[]{
                 android.R.attr.colorPrimary});
         int primaryColor = arr.getColor(0,-1);
@@ -108,16 +110,18 @@ public class SemiCircleView extends View {
         @SuppressLint("DefaultLocale") String ms = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-        foregroundPaint.setStyle(Paint.Style.FILL);
-        foregroundPaint.setTextSize(150);  // Regola la dimensione del testo come desiderato
-        foregroundPaint.setTextAlign(Paint.Align.CENTER);
 
         // Calcola le coordinate per il centro della vista
         int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2 + 260;
+        int centerY = getHeight() - 10; // padding
 
         // Disegna il testo al centro
+        foregroundPaint.setStyle(Paint.Style.FILL);
+        foregroundPaint.setTextSize(150);  // Regola la dimensione del testo come desiderato
+        foregroundPaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(ms, centerX, centerY, foregroundPaint);
+        foregroundPaint.setTextSize(55);
+        canvas.drawText(getContext().getString(R.string.focus), centerX, centerY - 150, foregroundPaint);
     }
 }
 

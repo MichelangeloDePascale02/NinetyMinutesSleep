@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             } else if (item.getItemId() == R.id.sleep_timer_for_sounds) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_numerical_slider_120,null);
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_numerical_slider,null);
                 // Set dialog title
                 View titleView = getLayoutInflater().inflate(R.layout.dialog_generic_title, null);
                 TextView titleText = titleView.findViewById(R.id.dialog_generic_title);

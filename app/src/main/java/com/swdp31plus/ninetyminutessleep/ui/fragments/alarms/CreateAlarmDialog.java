@@ -174,7 +174,7 @@ public class CreateAlarmDialog extends DialogFragment {
      * */
     private void updateSuggestion() {
         float normalizedHours = sleepHours % 24;
-        Log.e("CreateAlarmDialog","normalizedHours a: " + normalizedHours);
+        Log.w("CreateAlarmDialog","normalizedHours a: " + normalizedHours);
 
         if (normalizedHours > 0 && normalizedHours <= 6)
             sleepHoursGoalTextView.setText(String.format(getResources().getString(R.string.short_sleeper), normalizedHours));

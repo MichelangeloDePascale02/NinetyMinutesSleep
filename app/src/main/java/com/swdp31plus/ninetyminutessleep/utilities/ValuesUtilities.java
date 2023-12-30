@@ -9,6 +9,9 @@ public class ValuesUtilities {
 
     public static class PomodoroFlags {
         public static String CHANNEL_NAME = "Pomodoro Timer Channel";
-        public static long TOTAL_TIME = 2;
+        public static long DEFAULT_TIME = 2;
+        public static String POMODORO_PREFERENCES = "POMODORO_PREFERENCES";
+        public static String TIMER_IS_SET = "TIMER_IS_SET";
+        public static String DURATION_TIME = "DURATION_TIME";
     }
 }

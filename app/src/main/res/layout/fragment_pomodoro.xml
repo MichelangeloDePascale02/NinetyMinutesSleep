@@ -23,7 +23,6 @@
             android:id="@+id/startPomodoroButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
             android:drawableLeft="@drawable/baseline_play_circle_24"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_weight="1"
@@ -33,11 +32,19 @@
             android:id="@+id/stopPomodoroButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
             android:drawableLeft="@drawable/baseline_replay_circle_filled_24"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_weight="1"
             android:text="@string/reset_pomodoro"/>
+
+        <Button
+            android:id="@+id/durationPomodoroButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/baseline_replay_circle_filled_24"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_weight="1"
+            android:text="@string/duration_pomodoro"/>
 
     </LinearLayout>
 

@@ -8,8 +8,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,7 +22,6 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import com.swdp31plus.ninetyminutessleep.R;
 import com.swdp31plus.ninetyminutessleep.ui.main.MainActivity;
@@ -109,7 +108,9 @@ public class PomodoroService extends Service {
     public void stopTimer() {
         if (timer != null) {
             timer.cancel();
-            timerUpdateListener.onTimerUpdate((ValuesUtilities.PomodoroFlags.TOTAL_TIME) * 1000L * 60);
+            SharedPreferences sharedPreferences = getSharedPreferences(ValuesUtilities.PomodoroFlags.POMODORO_PREFERENCES, Context.MODE_PRIVATE);
+            long durationTime = sharedPreferences.getLong(ValuesUtilities.PomodoroFlags.DURATION_TIME, 25);
+            timerUpdateListener.onTimerUpdate(durationTime * 1000L * 60);
             deleteOngoingNotification();
         }
 
