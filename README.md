@@ -8,13 +8,15 @@ The user can set an Alarm, which will be kept in the app's memory until it is tr
 
 Another function already available is that relating to <b>sounds</b>: a series of sound effects can be produced which allow you to relax and, hopefully, induce sleep. Multiple sounds can be played <b>simultaneously</b> and a <b>sleep timer</b> can be set to prevent endless playback. In addition, each sound is adjustable in volume, to make the mix of noises unique and personal.
 
+It also allows you to set a small timer for concentration, the so-called Pomodoro Timer, of variable length as desired.
+
 Finally, it supports <b>Monet</b> theming engine!
 
 Here are some screenshots to give an idea of ​​the current state of the application:
 
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/a3f0f07a-5768-4270-96d1-0cd639f7f5b9" width=300>
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/345b73a6-46a6-4002-ad31-1d90bc40ab7b" width=300>
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/ba918e55-9807-4614-bff0-9739fc8e78a7" width=300>
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/51a63ec8-7310-4ed2-82dd-7c2d3c07ba5a" width=300>
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/ecbcdc28-e438-454f-8995-1589cb8e997b" width=300>
-<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/84f292ed-c1c5-4bc0-a3e3-a2795a6e9c8b" width=300>
+<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/83a66d9a-5743-4fcc-8cde-60af949fd439" width=300>
+<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/8b79fbcd-ca96-4a88-9f46-83fed3a2a090" width=300>
+<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/c575cf7d-c3d8-4f44-9c72-576793e19a23" width=300>
+<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/70c90007-4f05-4252-a8ae-b7ba5800fe60" width=300>
+<img src="https://github.com/MichelangeloDePascale02/NinetyMinutesSleep/assets/69792649/3618503e-c13e-4a47-bf13-40d59f653603" width=300>
+
