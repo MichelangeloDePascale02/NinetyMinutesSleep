@@ -60,7 +60,7 @@
 
     <string name="start_pomodoro">Start Pomodoro</string>
     <string name="reset_pomodoro">Reset Pomodoro</string>
-    <string name="duration_pomodoro">Change Duration</string>
+    <string name="duration_pomodoro">Change duration</string>
     <string name="focus">Time to focus!</string>
     <string name="reset_on_duration_pomodoro">Warning! Current timer will be cancelled.</string>
     <string name="pomodoro_notification_title">Pomodoro (NinetyMinutesSleep)</string>

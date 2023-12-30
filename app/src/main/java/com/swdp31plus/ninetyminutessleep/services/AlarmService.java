@@ -40,10 +40,10 @@ public class AlarmService extends Service {
         } catch (Exception e) {
         }
 
-        Log.e("Log in alarmservice", "Informazioni allarme");
-        Log.e("Log in alarmservice", "ID Allarme: " + newAlarm.getId());
-        Log.e("Log in alarmservice", newAlarm.getTime().toString());
-        Log.e("Log in alarmservice", newAlarm.toString());
+        Log.d("Log in alarmservice", "Informazioni allarme");
+        Log.d("Log in alarmservice", "ID Allarme: " + newAlarm.getId());
+        Log.d("Log in alarmservice", newAlarm.getTime().toString());
+        Log.d("Log in alarmservice", newAlarm.toString());
 
         if (!(intent.getStringExtra("action").equals("dismiss"))) {
             scheduleAlarm(newAlarm);
@@ -69,12 +69,12 @@ public class AlarmService extends Service {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(alarm.getTime());
 
-        Log.e("Log in alarmservice", "Millis correnti: " + System.currentTimeMillis());
-        Log.e("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
-        Log.e("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
+        Log.d("Log in alarmservice", "Millis correnti: " + System.currentTimeMillis());
+        Log.d("Log in alarmservice", "Millis alarm:    " + calendar.getTimeInMillis());
+        Log.d("Log in alarmservice", "Diff millis:     " + (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Log.e("Log in alarmservice", "Può schedulare? " + alarmManager.canScheduleExactAlarms());
+            Log.d("Log in alarmservice", "Può schedulare? " + alarmManager.canScheduleExactAlarms());
         }
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
